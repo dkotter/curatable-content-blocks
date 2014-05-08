@@ -1,6 +1,59 @@
 .content-blocks-wrapper {
 	overflow: hidden; /* clearfix */
 }
+.content-blocks-wrapper .row {
+	margin-left: -15px;
+	margin-right: -15px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.content-blocks-wrapper .row:before,
+.content-blocks-wrapper .row:after {
+	content: " ";
+	display: table;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.content-blocks-wrapper .row:after {
+	clear: both;
+}
+#poststuff .content-blocks-wrapper .row h3 {
+	padding: 8px 25px;
+	cursor: pointer;
+}
+.content-blocks-wrapper .row .block {
+	float: left;
+	position: relative;
+	min-height: 1px;
+	padding-left: 15px;
+	padding-right: 15px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.content-blocks-wrapper .full-width .block {
+	width: 100%;
+}
+.content-blocks-wrapper .col-1-2 .block {
+	width: 50%;
+}
+.content-blocks-wrapper .col-1-3 .block {
+	width: 33.33333333%;
+}
+.content-blocks-wrapper .col-2-3-1-3 .block {
+	width: 66.66666666%;
+}
+.content-blocks-wrapper .col-2-3-1-3 .block:last-child {
+	width: 33.33333333%;
+}
+.content-blocks-wrapper .col-1-3-2-3 .block {
+	width: 33.33333333%;
+}
+.content-blocks-wrapper .col-1-3-2-3 .block:last-child {
+	width: 66.66666666%;
+}
 
 .content-blocks {
 	padding: 10px;
@@ -43,7 +96,8 @@
 	text-align: left;
 }
 
-.content-block .delete-content-block {
+.content-block .delete-content-block,
+.row .delete-row {
 	float: right;
 	color: red;
 	font-size: .8em;
@@ -97,11 +151,13 @@
 	display: inline-block; /* not working - see jQuery toggle */
 }
 
-.content-block .handle:hover {
-	cursor: move;
+.content-block .handle:hover,
+.row .handle:hover {
+	cursor: move !important;
 }
 
-.content-block .handle img {
+.content-block .handle img,
+.row .handle img {
 	vertical-align: bottom;
 	margin-right: 5px;
 }

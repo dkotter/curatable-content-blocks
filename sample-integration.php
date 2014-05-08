@@ -37,12 +37,18 @@ class Sample_Content_Block_Areas {
 	 * @return void
 	 */
 	function init() {
+		// Row registration
+		tenup_register_row( 'full', 'Full Width Column', 'full-width', 1 );
+		tenup_register_row( '2-col', 'Two Equal Columns', 'col-1-2', 2 );
+		tenup_register_row( '3-col', 'Three Equal Columns', 'col-1-3', 3 );
+		tenup_register_row( '23-col', '2/3 - 1/3 Columns', 'col-2-3-1-3', 2 );
+		tenup_register_row( '13-col', '1/3 - 2/3 Columns', 'col-1-3-2-3', 2 );
 
 		// content block registration
 		tenup_register_content_block( 'html', 'Text/HTML', 'Sample_Content_Block_HTML' );
 
 		// This one has the widget bridge enabled
-		tenup_register_content_block( 'no-settings', 'No Settings', 'Sample_Content_Block_No_Settings', array( 'widget' => true ) );
+		tenup_register_content_block( 'sample-no-settings', 'No Settings', 'Sample_Content_Block_No_Settings', array( 'widget' => true ) );
 	}
 
 	public function admin_enqueue_scripts() {
@@ -62,68 +68,49 @@ class Sample_Content_Block_Areas {
 			return false;
 		}
 
-		$blocks = get_post_meta( $post->ID, 'tenup_content_blocks', true );
-
-		// get default blocks when adding a new custom item
-		if ( ! $blocks && 'custom_post_type' === get_post_type( $post ) ) {
-			$screen = get_current_screen();
-			if ( 'add' === $screen->action ) {
-				$blocks = $this->default_cpt_blocks();
-			}
-		}
+		$rows = get_post_meta( $post->ID, 'tenup_content_blocks', true );
 
 		wp_nonce_field( 'tenup-save-content-blocks', $name = 'tenup_content_blocks_nonce' );
-?>
-<div class="content-blocks-wrapper">
-	<?php if ( 'custom_post_type' === get_post_type( $post ) ) : ?>
-	<div class="postbox breaking-news">
-		<h3>Breaking News</h3>
+	?>
 
-		<?php
-			// Only allow specific blocks
-			$block_args = array(
-				'include' => array( 'html' ),
-			);
-			$this->edit_blocks( 'breaking-news', $blocks, $block_args );
-		?>
-	</div>
-	<?php endif; ?>
+		<div class="content-blocks-wrapper sortable">
+		<?php if ( ! empty( $rows ) ) :
+			foreach ( (array) $rows as $row => $areas ) :
+				foreach ( (array) $areas as $area => $columns ) :
+					$registered_rows = tenup_get_registered_rows();
+					if ( isset( $registered_rows[$area] ) ) :
+	?>
 
-	<div class="sample-layout-left">
-		<div class="postbox large-main">
-			<h3>Large Main Column</h3>
+						<div class="postbox row <?php echo esc_attr( $registered_rows[$area]['class'] ); ?>">
+							<h3>
+								<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
+								<?php echo esc_html( $registered_rows[$area]['name'] ); ?>
+								<a href="#" class="delete-row">Delete</a>
+							</h3>
 
-			<?php $this->edit_blocks( 'large-main', $blocks ); ?>
-		</div>
+							<?php foreach ( (array) $columns as $column => $blocks ) : ?>
+								<div class="block" data-tenup-column="<?php echo esc_attr( $column ); ?>">
+									<?php $this->edit_blocks( $area, $blocks, $row, $column ); ?>
+								</div>
+							<?php endforeach; ?>
+						</div><!-- .<?php echo esc_attr( $registered_rows[$area]['class'] ); ?> -->
 
-		<div class="postbox left-main-col">
-			<h3>Left Column</h3>
+	<?php
+					endif;
+				endforeach;
+			endforeach;
+		endif;
+	?>
 
-			<?php $this->edit_blocks( 'left-main', $blocks ); ?>
-		</div>
+			<span class="ccb-add"><i class="dashicons dashicons-plus"></i> Add row:</span>
+			<ul class="ccb-choose-row">
+			<?php foreach ( tenup_get_registered_rows() as $id => $row ) : ?>
+				<li><a href="#" data-type="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $row['name'] ); ?></a></li>
+			<?php endforeach; ?>
+			</ul>
+		</div><!-- .content-blocks-wrapper -->
 
-		<div class="postbox right-main-col">
-			<h3>Right Column</h3>
-
-			<?php $this->edit_blocks( 'right-main', $blocks ); ?>
-		</div>
-
-		<div class="postbox bottom-col">
-			<h3>Bottom Column</h3>
-
-			<?php $this->edit_blocks( 'bottom', $blocks ); ?>
-		</div>
-	</div>
-
-	<div class="sample-layout-right">
-		<div class="postbox large-main">
-			<h3>Sidebar</h3>
-
-			<?php $this->edit_blocks( 'sidebar', $blocks ); ?>
-		</div>
-	</div>
-</div>
-<?php
+	<?php
 	}
 
 	private function default_cpt_blocks() {
@@ -147,16 +134,18 @@ class Sample_Content_Block_Areas {
 		$this->edit_blocks( 'sidebar', $blocks );
 	}
 
-	public function edit_blocks( $area, $blocks, $block_args = array() ) {
+	public function edit_blocks( $area, $blocks, $row = 0, $column = 1, $block_args = array() ) {
 ?>
 <div class="content-blocks sortable">
 	<?php
 		$i = 0;
 
 		// render the current data
-		if ( ! empty( $blocks[ $area ] ) && is_array( $blocks[ $area ] ) ) {
-			foreach ( $blocks[ $area ] as $data ) {
-				echo $this->template( $data['type'], $data, $area, $i );
+		if ( ! empty( $blocks ) && is_array( $blocks ) ) {
+			foreach ( $blocks as $data ) {
+				if ( isset( $data['type'] ) ) {
+					echo $this->template( $data['type'], $data, $area, $i, $row, $column );
+				}
 				$i++;
 			}
 		}
@@ -167,7 +156,7 @@ class Sample_Content_Block_Areas {
 <?php
 	}
 
-	private function template( $type, $data, $area, $i ) {
+	private function template( $type, $data, $area, $i, $row = 0, $column = 1 ) {
 		$registered_blocks = tenup_get_registered_content_blocks();
 		if ( isset( $registered_blocks[ $type ] ) && is_callable( array( $registered_blocks[ $type ]['class'], 'settings_form' ) ) ) {
 			?>
@@ -180,7 +169,7 @@ class Sample_Content_Block_Areas {
 
 				<div class="interior">
 					<?php
-					$registered_blocks[ $type ]['class']::settings_form( $data, $area, $i );
+					$registered_blocks[ $type ]['class']::settings_form( $data, $area, $row, $column, $i );
 					?>
 				</div>
 			</div>
@@ -190,7 +179,7 @@ class Sample_Content_Block_Areas {
 
 	private function adder( $area, $iterator = 0, $block_args = array() ) {
 ?>
-<div class="content-block-adder" data-tenup-area=<?php echo esc_attr( $area ); ?> data-tenup-iterator=<?php echo esc_attr( $iterator ); ?>>
+<div class="content-block-adder" data-tenup-area="<?php echo esc_attr( $area ); ?>" data-tenup-iterator="<?php echo esc_attr( $iterator ); ?>">
 	<a class="toggle" href="#">Add block</a>
 	<div class="content-block-select hide-if-js">
 		<select name="new_content_block">
@@ -248,23 +237,31 @@ class Sample_Content_Block_Areas {
 
 		$new = array();
 
-		foreach ( (array) $_POST['tenup_content_blocks'] as $area => $blocks ) {
+		foreach ( (array) $_POST['tenup_content_blocks'] as $row => $areas ) {
 			$value = array();
 
-			foreach ( (array) $blocks as $key => $data ) {
-				$type = $data['type'];
+			foreach ( (array) $areas as $area => $columns ) {
+				$value[$area] = array();
 
-				// not a registered block
-				if ( ! isset( $registered_blocks[ $type ] ) ) {
-					continue;
-				}
+				foreach ( (array) $columns as $column => $blocks ) {
+					$value[$area][$column] = array();
 
-				if ( is_callable( array( $registered_blocks[ $type ]['class'], 'clean_data' ) ) ) {
-					$value[] = $registered_blocks[ $type ]['class']::clean_data( $data );
+					foreach ( (array) $blocks as $key => $data ) {
+						$type = $data['type'];
+
+						// not a registered block
+						if ( ! isset( $registered_blocks[ $type ] ) ) {
+							continue;
+						}
+
+						if ( is_callable( array( $registered_blocks[ $type ]['class'], 'clean_data' ) ) ) {
+							$value[$area][$column][] = $registered_blocks[ $type ]['class']::clean_data( $data );
+						}
+					}
 				}
 			}
 
-			$new[ $area ] = $value;
+			$new[ $row ] = $value;
 		}
 
 		update_post_meta( $post_id, $meta_key, $new );
@@ -274,4 +271,5 @@ class Sample_Content_Block_Areas {
 	}
 } // Sample_Content_Block_Areas
 
+global $sample_content_block_areas;
 $sample_content_block_areas = new Sample_Content_Block_Areas();

@@ -4,15 +4,15 @@
  * textarea that allows some HTML.
  */
 class Sample_Content_Block_HTML extends Tenup_Content_Block {
-	public static function settings_form( $data, $area, $iterator = 0 ) {
-		?>
-		<input type="hidden" name="tenup_content_blocks[<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="html" />
+	public static function settings_form( $data, $area, $row = 1, $column = 1, $iterator = 0 ) {
+	?>
+		<input type="hidden" name="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="html" />
 
 		<p>
-			<label for="tenup_content_blocks[<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $iterator ); ?>][content]">Content</label>
-			<textarea name="tenup_content_blocks[<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $iterator ); ?>][content]" class="widefat"><?php if ( isset( $data['content'] ) ) echo esc_textarea( $data['content' ] ); ?></textarea>
+			<label for="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][content]">Content</label>
+			<textarea name="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][content]" class="widefat"><?php if ( isset( $data['content'] ) ) echo esc_textarea( $data['content' ] ); ?></textarea>
 		</p>
-		<?php
+	<?php
 	}
 
 	public static function clean_data( $data ) {

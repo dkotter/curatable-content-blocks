@@ -13,6 +13,28 @@ abstract class Tenup_Content_Block {
 		return false;
 	}
 
+	public static function js_row_template( $id, $name, $class, $columns ) {
+		global $post, $sample_content_block_areas;
+
+		$blocks = get_post_meta( $post->ID, 'tenup_content_blocks', true );
+	?>
+		<script type="text/html" id="tmpl-tenup-cb-<?php echo esc_attr( $id ); ?>">
+			<div class="postbox row <?php echo esc_attr( $class ); ?>">
+				<h3>
+					<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
+					<?php echo esc_html( $name ); ?>
+					<a href="#" class="delete-row">Delete</a>
+				</h3>
+				<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>
+					<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+						<?php $sample_content_block_areas->edit_blocks( $id, $blocks ); ?>
+					</div>
+				<?php endfor; ?>
+			</div><!-- .<?php echo esc_attr( $class ); ?> -->
+		</script>
+	<?php
+	}
+
 	public static function js_template( $id, $name ) {
 		echo '<script type="text/html" id="tmpl-tenup-cb-' .  esc_attr( $id ) . '">';
 		?>
@@ -25,7 +47,7 @@ abstract class Tenup_Content_Block {
 
 			<div class="interior">
 				<?php
-				echo static::settings_form( array(), '{{{area}}}', '{{{iterator}}}' );
+				echo static::settings_form( array(), '{{{area}}}', '{{{row}}}', '{{{column}}}', '{{{iterator}}}' );
 				?>
 			</div>
 		</div>
