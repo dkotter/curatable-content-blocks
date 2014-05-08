@@ -7,20 +7,22 @@ window.wp = window.wp || {};
 	// Sortable blocks
 	$( '.sortable' ).sortable({
     	handle: '.handle',
-    	// placeholder: 'placeholder',
-    	forcePlaceholderSize: true
+    	forcePlaceholderSize: true,
+    	items: "> div"
     });
 
-    $( '.content-block-adder .toggle' ).on( 'click', function(e){
+    $body.on( 'click', '.content-block-adder .toggle', function(e){
     	e.preventDefault();
     	$(this).toggleClass( 'open' ).siblings( '.content-block-select' ).slideToggle( 'fast' );
     })
 
 	var cache = {};
-	$('.add-content-block').on('click', function(e){
+	$body.on( 'click', '.add-content-block', function(e){
 		var $this = $(this),
 			$adder = $this.closest('.content-block-adder'),
 			area = $adder.data('tenupArea'),
+			row = $this.closest( '.row' ).index(),
+			column = $this.closest( '.block' ).data( 'tenupColumn' ),
 			iterator = $adder.data('tenupIterator'),
 			$toggle = $adder.find('.toggle'),
 			type = $this.siblings('[name=new_content_block]').val(),
@@ -34,6 +36,8 @@ window.wp = window.wp || {};
 
 		// Hard-coded instance of area support
 		template = template.replace( /\{{{area}}}/g, area );
+		template = template.replace( /\{{{row}}}/g, row );
+		template = template.replace( /\{{{column}}}/g, column );
 		template = template.replace( /\{{{iterator}}}/g, iterator );
 		$adder.data('tenupIterator', iterator + 1);
 
@@ -53,6 +57,11 @@ window.wp = window.wp || {};
 
 	$body.on('click', '.delete-content-block', function(e){
 		$(this).closest('.content-block').remove();
+		e.preventDefault();
+	});
+
+	$body.on( 'click', '.delete-row', function( e ) {
+		$( this ).closest( '.row' ).remove();
 		e.preventDefault();
 	});
 
@@ -125,5 +134,30 @@ window.wp = window.wp || {};
 		$image.attr('src', '');
 		$field.attr('value', '');
 	});
+
+	$( '.ccb-choose-row a' ).on( 'click', onClickAddNewRow );
+	$( '.delete-row' ).on( 'click', onClickRemoveRow );
+
+	function onClickAddNewRow( e ) {
+		e.preventDefault();
+
+		var $target = $( '.ccb-add' ),
+			$this = $( e.currentTarget ),
+			type = $this.data( 'type' ),
+			template;
+
+		if ( type in cache ) {
+			template = cache[type];
+		} else {
+			template = cache[type] = $('#tmpl-tenup-cb-' + type).html()
+		}
+
+		$target.before( template );
+	}
+
+	function onClickRemoveRow( e ) {
+		e.preventDefault();
+		$( this ).closest( '.row' ).remove();
+	}
 
 })(jQuery);
