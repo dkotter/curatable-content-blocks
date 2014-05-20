@@ -27,14 +27,10 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		$blocks = isset( $instance['content_blocks'] ) ? $instance['content_blocks'] : array();
+		$block = isset( $instance['data'] ) ? $instance['data'] : false;
 
-		if ( isset( $blocks['sidebar'] ) ) {
-			foreach ( $blocks['sidebar'] as $block ) {
-				if ( function_exists( 'tenup_display_block' ) ) {
-					tenup_display_block( $block['type'], $block, 'widget' );
-				}
-			}
+		if ( function_exists( 'tenup_display_block' ) && false !== $block ) {
+			tenup_display_block( $block['type'], $block, 'widget' );
 		}
 	}
 
