@@ -102,12 +102,21 @@ class Sample_Content_Block_Areas {
 		endif;
 	?>
 
-			<span class="ccb-add"><i class="dashicons dashicons-plus"></i> Add row:</span>
-			<ul class="ccb-choose-row">
-			<?php foreach ( tenup_get_registered_rows() as $id => $row ) : ?>
-				<li><a href="#" data-type="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $row['name'] ); ?></a></li>
-			<?php endforeach; ?>
-			</ul>
+			<h3 class="ccb-add"><i class="dashicons dashicons-plus"></i> Add New Row</h3>
+			<div class="ccb-menu">
+				<div class="ccb-menu-pane">
+					<ul class="ccb-choose-row">
+					<?php foreach ( tenup_get_registered_rows() as $id => $row ) : ?>
+						<li>
+							<a href="#" class="<?php echo esc_attr( $row['class'] ); ?>" data-type="<?php echo esc_attr( $id ); ?>">
+								<div class="ccb-item-wrapper"><span class="ccb-item-add-icon"></span></div>
+								<div class="ccb-item-description"><?php echo esc_html( $row['name'] ); ?></div>
+							</a>
+						</li>
+					<?php endforeach; ?>
+					</ul>
+				</div><!-- .ccb-menu-pane -->
+			</div><!-- .ccb-menu -->
 		</div><!-- .content-blocks-wrapper -->
 
 	<?php
