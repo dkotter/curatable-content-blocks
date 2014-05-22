@@ -76,13 +76,11 @@ class Tenup_Content_Blocks {
 		$id = sanitize_key( $id );
 		$name = esc_html( $name );
 
-		// load files for classes
-		if ( ! include_once( 'blocks/' . $id . '.php' ) ) {
-			return false;
-		}
-
+		// if class doesn't exist, try loading from plugin
 		if ( ! class_exists( $class ) ) {
-			return false;
+			if ( ! include_once( 'blocks/' . $id . '.php' ) ) {
+				return false;
+			}
 		}
 
 		$this->blocks[ $id ] = array(

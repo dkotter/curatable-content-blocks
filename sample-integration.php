@@ -103,7 +103,7 @@ class Sample_Content_Block_Areas {
 	?>
 
 			<h3 class="ccb-add"><i class="dashicons dashicons-plus"></i> Add New Row</h3>
-			<div class="ccb-menu">
+			<div class="ccb-menu postbox">
 				<div class="ccb-menu-pane">
 					<ul class="ccb-choose-row">
 					<?php foreach ( tenup_get_registered_rows() as $id => $row ) : ?>
