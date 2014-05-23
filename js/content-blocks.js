@@ -71,6 +71,16 @@ window.wp = window.wp || {};
 		$this.closest('.interior').siblings('.content-block-header').find('.block-label').html( ': ' + $this.val() );
 	});
 
+	// Manual override switcher
+	$body.on( 'change', '.toggle-manual input', function(e){
+		e.preventDefault();
+		var $this = $( this ),
+		$toggle = $this.closest( '.toggle-manual' );
+
+		$toggle.siblings( '.non-manual' ).slideToggle( 'fast' );
+		$toggle.siblings( '.manual' ).slideToggle( 'fast' );
+	});
+
 	// Media uploader
 	$body.on( 'click', '.select-image', function(e) {
 		var $this = $(this),
