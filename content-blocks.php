@@ -127,7 +127,7 @@ class Tenup_Content_Blocks {
 	 */
 	public function print_templates() {
 		$screen = get_current_screen();
-		if ( 'post' === $screen->base || 'widgets' === $screen->base || post_type_supports( $screen->post_type, 'tenup-content-blocks' ) ) {
+		if ( ( 'post' === $screen->base && post_type_supports( $screen->post_type, 'tenup-content-blocks' ) ) || 'widgets' === $screen->base ) {
 			// Print out JS template for each block type
 			foreach( tenup_get_registered_content_blocks() as $id => $block ) {
 				if ( is_callable( array( $block['class'], 'js_template' ) ) ) {

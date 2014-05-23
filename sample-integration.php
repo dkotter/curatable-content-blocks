@@ -27,7 +27,6 @@ class Sample_Content_Block_Areas {
 		add_action( 'after_setup_theme', array( $this, 'init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'edit_form_after_title', array( $this, 'page_blocks' ) );
-		add_action( 'add_meta_boxes_post', array( $this, 'post_blocks' ) );
 		add_action( 'save_post', array( $this, 'save' ), 10, 2 );
 	}
 
@@ -55,16 +54,14 @@ class Sample_Content_Block_Areas {
 		$screen = get_current_screen();
 
 		// Allowed for post, widgets, and any post type with support for 'tenup-content-blocks'
-		if ( 'post' === $screen->base || 'widgets' === $screen->base || post_type_supports( $screen->post_type, 'tenup-content-blocks' ) ) {
-			// wp_enqueue_media();
-
+		if ( ( 'post' === $screen->base && post_type_supports( $screen->post_type, 'tenup-content-blocks' ) ) || 'widgets' === $screen->base ) {
 			wp_enqueue_script( 'tenup-content-blocks', plugins_url( '/js/content-blocks.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), false, true );
 			wp_enqueue_style( 'tenup-content-blocks', plugins_url( '/css/content-blocks.css', __FILE__ ) );
 		}
 	}
 
 	public function page_blocks( $post ) {
-		if ( ! in_array( get_post_type( $post ), array( 'custom_post_type', 'page' ) ) ) {
+		if ( ! in_array( get_post_type( $post ), array( 'page' ) ) ) {
 			return false;
 		}
 
@@ -120,27 +117,6 @@ class Sample_Content_Block_Areas {
 		</div><!-- .content-blocks-wrapper -->
 
 	<?php
-	}
-
-	private function default_cpt_blocks() {
-		// @todo: some of these may need some default settings as well
-		return array(
-			'sidebar' => array(
-				array( 'type' => 'no-settings' ),
-			),
-		);
-	}
-
-	public function post_blocks() {
-		add_meta_box( 'sample-article-sidebar', 'Article Sidebar', array( $this, 'article_sidebar' ), 'post', 'normal', 'high' );
-	}
-
-	public function article_sidebar() {
-		$blocks = get_post_meta( get_the_ID(), 'tenup_content_blocks', true );
-
-		wp_nonce_field( 'tenup-save-content-blocks', $name = 'tenup_content_blocks_nonce' );
-
-		$this->edit_blocks( 'sidebar', $blocks );
 	}
 
 	public function edit_blocks( $area, $blocks, $row = 0, $column = 1, $block_args = array() ) {
