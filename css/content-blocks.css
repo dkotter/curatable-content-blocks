@@ -109,6 +109,9 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+.content-blocks-wrapper .row.closed .block {
+	display: none;
+}
 .content-blocks-wrapper .full-width .block {
 	width: 100%;
 }
