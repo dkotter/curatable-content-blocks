@@ -40,6 +40,7 @@ class Sample_Content_Block_Areas {
 		tenup_register_row( 'full', 'Full Width Column', 'full-width', 1 );
 		tenup_register_row( '2-col', 'Two Equal Columns', 'col-1-2', 2 );
 		tenup_register_row( '3-col', 'Three Equal Columns', 'col-1-3', 3 );
+		tenup_register_row( '4-col', 'Four Equal Columns', 'col-1-4', 4 );
 		tenup_register_row( '23-col', '2/3 - 1/3 Columns', 'col-2-3-1-3', 2 );
 		tenup_register_row( '13-col', '1/3 - 2/3 Columns', 'col-1-3-2-3', 2 );
 

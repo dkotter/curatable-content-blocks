@@ -159,10 +159,14 @@ window.wp = window.wp || {};
 		if ( type in cache ) {
 			template = cache[type];
 		} else {
-			template = cache[type] = $('#tmpl-tenup-cb-' + type).html()
+			template = cache[type] = $( '#tmpl-tenup-cb-' + type ).html();
 		}
 
 		$target.before( template );
+		$( '.postbox.new' ).on( 'click', 'h3', function( e ) {
+			var p = $( this ).parent( '.postbox' );
+			p.toggleClass( 'closed' );
+		});
 	}
 
 	function onClickRemoveRow( e ) {

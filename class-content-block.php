@@ -19,7 +19,7 @@ abstract class Tenup_Content_Block {
 		$blocks = get_post_meta( $post->ID, 'tenup_content_blocks', true );
 	?>
 		<script type="text/html" id="tmpl-tenup-cb-<?php echo esc_attr( $id ); ?>">
-			<div class="postbox row <?php echo esc_attr( $class ); ?>">
+			<div class="postbox row new <?php echo esc_attr( $class ); ?>">
 				<h3>
 					<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
 					<?php echo esc_html( $name ); ?>
