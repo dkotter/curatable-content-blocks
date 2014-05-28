@@ -145,6 +145,11 @@ window.wp = window.wp || {};
 		$field.attr('value', '');
 	});
 
+	$body.on( 'click', '.new h3', function( e ) {
+		var p = $( this ).parent( '.postbox' );
+		p.toggleClass( 'closed' );
+	});
+
 	$( '.ccb-choose-row a' ).on( 'click', onClickAddNewRow );
 	$( '.delete-row' ).on( 'click', onClickRemoveRow );
 
@@ -163,10 +168,6 @@ window.wp = window.wp || {};
 		}
 
 		$target.before( template );
-		$( '.postbox.new' ).on( 'click', 'h3', function( e ) {
-			var p = $( this ).parent( '.postbox' );
-			p.toggleClass( 'closed' );
-		});
 	}
 
 	function onClickRemoveRow( e ) {
