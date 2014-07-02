@@ -40,7 +40,7 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 		$data = isset( $instance['data'] ) ? $instance['data'] : array();
 
 		if ( isset( $registered_blocks[ $this->_content_block_type ] ) && is_callable( array( $registered_blocks[ $this->_content_block_type ]['class'], 'settings_form' ) ) ) {
-			$registered_blocks[ $this->_content_block_type ]['class']::settings_form( $data, 'widget', 0 );
+			$registered_blocks[ $this->_content_block_type ]['class']::settings_form( $data, 'widget', 0, 0 );
 		}
 	}
 
@@ -49,7 +49,7 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 			return $old_instance;
 		}
 
-		$data = $_POST['tenup_content_blocks']['widget'][0];
+		$data = $_POST['tenup_content_blocks'][0]['widget'][0][0];
 
 		$registered_blocks = tenup_get_registered_content_blocks();
 

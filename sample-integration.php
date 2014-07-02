@@ -37,7 +37,7 @@ class Sample_Content_Block_Areas {
 	 */
 	function init() {
 		// Row registration
-		tenup_register_row( 'full', 'Full Width Column', 'full-width', 1 );
+		tenup_register_row( 'full', 'Full Width Column', 'col-1-1', 1 );
 		tenup_register_row( '2-col', 'Two Equal Columns', 'col-1-2', 2 );
 		tenup_register_row( '3-col', 'Three Equal Columns', 'col-1-3', 3 );
 		tenup_register_row( '4-col', 'Four Equal Columns', 'col-1-4', 4 );
@@ -46,9 +46,6 @@ class Sample_Content_Block_Areas {
 
 		// content block registration
 		tenup_register_content_block( 'html', 'Text/HTML', 'Sample_Content_Block_HTML' );
-
-		// This one has the widget bridge enabled
-		tenup_register_content_block( 'sample-no-settings', 'No Settings', 'Sample_Content_Block_No_Settings', array( 'widget' => true ) );
 	}
 
 	public function admin_enqueue_scripts() {

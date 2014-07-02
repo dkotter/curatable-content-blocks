@@ -36,7 +36,7 @@
 .ccb-choose-row li a:hover .ccb-item-add-icon {
 	opacity: 1;
 }
-.full-width .ccb-item-wrapper {
+.col-1-1 .ccb-item-wrapper {
 	background-image: url(../img/full.png);
 }
 .col-1-2 .ccb-item-wrapper {
@@ -115,7 +115,7 @@
 .content-blocks-wrapper .row.closed .block {
 	display: none;
 }
-.content-blocks-wrapper .full-width .block {
+.content-blocks-wrapper .col-1-1 .block {
 	width: 100%;
 }
 .content-blocks-wrapper .col-1-2 .block {
