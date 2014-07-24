@@ -175,4 +175,6 @@ window.wp = window.wp || {};
 		$( this ).closest( '.row' ).remove();
 	}
 
+	$(document).ready(function() { $( '.select2' ).select2({ width: 200 }); });
+
 })(jQuery);

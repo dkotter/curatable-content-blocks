@@ -54,7 +54,9 @@ class Sample_Content_Block_Areas {
 		// Allowed for post, widgets, and any post type with support for 'tenup-content-blocks'
 		if ( ( 'post' === $screen->base && post_type_supports( $screen->post_type, 'tenup-content-blocks' ) ) || 'widgets' === $screen->base ) {
 			wp_enqueue_script( 'tenup-content-blocks', plugins_url( '/js/content-blocks.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), false, true );
+			wp_enqueue_script( 'select2', plugins_url( '/js/select2.min.js', __FILE__ ), array(), false );
 			wp_enqueue_style( 'tenup-content-blocks', plugins_url( '/css/content-blocks.css', __FILE__ ) );
+			wp_enqueue_style( 'select2css', plugins_url( '/css/select2.css', __FILE__ ) );
 		}
 	}
 
@@ -68,26 +70,41 @@ class Sample_Content_Block_Areas {
 		wp_nonce_field( 'tenup-save-content-blocks', $name = 'tenup_content_blocks_nonce' );
 	?>
 
-		<div class="content-blocks-wrapper sortable">
+		<div class="content-blocks-wrapper">
 		<?php if ( ! empty( $rows ) ) :
 			foreach ( (array) $rows as $row => $areas ) :
 				foreach ( (array) $areas as $area => $columns ) :
 					$registered_rows = tenup_get_registered_rows();
-					if ( isset( $registered_rows[$area] ) ) :
+					if ( isset( $registered_rows[ $area ] ) ) :
+						$cols = $registered_rows[ $area ]['cols'];
 	?>
 
-						<div class="postbox row <?php echo esc_attr( $registered_rows[$area]['class'] ); ?>">
+						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
-								<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
-								<?php echo esc_html( $registered_rows[$area]['name'] ); ?>
+								<!--<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>-->
+								<?php echo esc_html( $registered_rows[ $area ]['name'] ); ?>
 								<a href="#" class="delete-row">Delete</a>
 							</h3>
 
-							<?php foreach ( (array) $columns as $column => $blocks ) : ?>
-								<div class="block" data-tenup-column="<?php echo esc_attr( $column ); ?>">
-									<?php $this->edit_blocks( $area, $blocks, $row, $column ); ?>
-								</div>
-							<?php endforeach; ?>
+							<?php if ( count( (array) $columns ) === $cols ) : ?>
+								<?php foreach ( (array) $columns as $column => $blocks ) : ?>
+									<div class="block" data-tenup-column="<?php echo esc_attr( $column ); ?>">
+										<?php $this->edit_blocks( $area, $blocks, $row, $column ); ?>
+									</div>
+								<?php endforeach; ?>
+							<?php else :
+								$i = 1; while ( $i <= $cols ) :
+									if ( isset( $columns[ $i ] ) ) : ?>
+										<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+											<?php $this->edit_blocks( $area, $columns[ $i ], $row, $i ); ?>
+										</div>
+									<?php else : ?>
+										<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+											<?php $this->edit_blocks( $area, '', $row, $i ); ?>
+										</div>
+									<?php endif; ?>
+								<?php $i++; endwhile; ?>
+							<?php endif; ?>
 						</div><!-- .<?php echo esc_attr( $registered_rows[$area]['class'] ); ?> -->
 
 	<?php
@@ -224,10 +241,10 @@ class Sample_Content_Block_Areas {
 			$value = array();
 
 			foreach ( (array) $areas as $area => $columns ) {
-				$value[$area] = array();
+				$value[ $area ] = array();
 
 				foreach ( (array) $columns as $column => $blocks ) {
-					$value[$area][$column] = array();
+					$value[ $area ][ $column ] = array();
 
 					foreach ( (array) $blocks as $key => $data ) {
 						$type = $data['type'];
@@ -238,7 +255,7 @@ class Sample_Content_Block_Areas {
 						}
 
 						if ( is_callable( array( $registered_blocks[ $type ]['class'], 'clean_data' ) ) ) {
-							$value[$area][$column][] = $registered_blocks[ $type ]['class']::clean_data( $data );
+							$value[ $area ][ $column ][] = $registered_blocks[ $type ]['class']::clean_data( $data );
 						}
 					}
 				}

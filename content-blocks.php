@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: Content Blocks
+ * Plugin Name: Content Blocks (10up)
  * Description: Curatable content blocks.
  * Author: 10up
  * Version: 0.1
