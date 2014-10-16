@@ -8,7 +8,20 @@ window.wp = window.wp || {};
 	$( '.sortable' ).sortable({
     	handle: '.handle',
     	forcePlaceholderSize: true,
-    	items: "> div"
+    	items: "> div",
+		update: function( event, ui ) {
+			var target = $( event.target );
+			if ( target.hasClass( 'content-blocks-wrapper' ) ) {
+				$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+					var $this = $( this ),
+						index = $this.parents( '.row' ).index(),
+						name = $this.attr( 'name' ),
+						replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
+
+					$this.attr( 'name', replacement );
+				});
+			}
+		}
     });
 
     $body.on( 'click', '.content-block-adder .toggle', function(e){
@@ -28,11 +41,11 @@ window.wp = window.wp || {};
 			type = $this.siblings('[name=new_content_block]').val(),
 			template;
 
-			if ( type in cache ) {
-				template = cache[type];
-			} else {
-				template = cache[type] = $('#tmpl-tenup-cb-' + type).html()
-			}
+		if ( type in cache ) {
+			template = cache[type];
+		} else {
+			template = cache[type] = $('#tmpl-tenup-cb-' + type).html()
+		}
 
 		// Hard-coded instance of area support
 		template = template.replace( /\{{{area}}}/g, area );
@@ -41,10 +54,18 @@ window.wp = window.wp || {};
 		template = template.replace( /\{{{iterator}}}/g, iterator );
 		$adder.data('tenupIterator', iterator + 1);
 
-		$added = $( template ).insertBefore($adder);
-
+		var $added = $( template ).insertBefore($adder);
 		// Example of initializing a JS widget on add
-		$added.find('.post-finder').postFinder();
+		$added.find( '.post-finder' ).postFinder();
+		$added.find( '.select2').select2({ width: 200 });
+		if ( 'html' === type ) {
+			var editor_id = $added.find( '.ckeditor' ).attr( 'id' );
+			CKEDITOR.replace( editor_id );
+		}
+		if ( 'embeds' === type ) {
+			var editor_id = $added.find( '.wp-editor-area' ).attr( 'id' );
+			quicktags( editor_id );
+		}
 
 		$toggle.click();
 
@@ -63,12 +84,14 @@ window.wp = window.wp || {};
 	$body.on( 'click', '.delete-row', function( e ) {
 		$( this ).closest( '.row' ).remove();
 		e.preventDefault();
-	});
+		$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+			var $this = $( this ),
+				index = $this.parents( '.row' ).index(),
+				name = $this.attr( 'name' ),
+				replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
 
-	// currently unused, but here as an example for putting the title in the content block title live
-	$body.on('keyup', '.block-title', function(){
-		$this = $(this);
-		$this.closest('.interior').siblings('.content-block-header').find('.block-label').html( ': ' + $this.val() );
+			$this.attr( 'name', replacement );
+		});
 	});
 
 	// Manual override switcher
@@ -84,7 +107,7 @@ window.wp = window.wp || {};
 	// Media uploader
 	$body.on( 'click', '.select-image', function(e) {
 		var $this = $(this),
-			$image = $this.siblings('img');
+			$image = $this.siblings('img'),
 			$field = $this.siblings('.image-id-input');
 
 		e.preventDefault();
@@ -145,11 +168,6 @@ window.wp = window.wp || {};
 		$field.attr('value', '');
 	});
 
-	$body.on( 'click', '.new h3', function( e ) {
-		var p = $( this ).parent( '.postbox' );
-		p.toggleClass( 'closed' );
-	});
-
 	$( '.ccb-choose-row a' ).on( 'click', onClickAddNewRow );
 	$( '.delete-row' ).on( 'click', onClickRemoveRow );
 
@@ -159,6 +177,7 @@ window.wp = window.wp || {};
 		var $target = $( '.ccb-add' ),
 			$this = $( e.currentTarget ),
 			type = $this.data( 'type' ),
+			row = $body.find( '.row' ).last().index(),
 			template;
 
 		if ( type in cache ) {
@@ -166,6 +185,7 @@ window.wp = window.wp || {};
 		} else {
 			template = cache[type] = $( '#tmpl-tenup-cb-' + type ).html();
 		}
+		template = template.replace( /\{{{row}}}/g, ++row );
 
 		$target.before( template );
 	}
@@ -173,8 +193,22 @@ window.wp = window.wp || {};
 	function onClickRemoveRow( e ) {
 		e.preventDefault();
 		$( this ).closest( '.row' ).remove();
+		$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+			var $this = $( this ),
+				index = $this.parents( '.row' ).index(),
+				name = $this.attr( 'name' ),
+				replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
+
+			$this.attr( 'name', replacement );
+		});
 	}
 
-	$(document).ready(function() { $( '.select2' ).select2({ width: 200 }); });
+	$( document ).ready(function() {
+		$( '.select2' ).select2({ width: 200 });
+		$( '.ckeditor' ).each( function() {
+			var editor_id = $( this ).attr( 'id' );
+			CKEDITOR.replace( editor_id );
+		});
+	});
 
 })(jQuery);

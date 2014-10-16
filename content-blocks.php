@@ -38,6 +38,11 @@ function tenup_display_block( $type, $block, $area ) {
 		return false;
 	}
 
+	// Don't show paused blocks
+	if ( isset( $block['pause'] ) && 'y' === $block['pause'] ) {
+		return false;
+	}
+
 	// allow for overrides, e.g. in a child theme
 	if ( function_exists( 'tenup_content_block_display_' . $type ) ) {
 		call_user_func( 'tenup_content_block_display_' . $type, $type, $block, $area );

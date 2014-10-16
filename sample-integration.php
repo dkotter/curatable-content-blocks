@@ -46,6 +46,23 @@ class Sample_Content_Block_Areas {
 
 		// content block registration
 		tenup_register_content_block( 'html', 'Text/HTML', 'Sample_Content_Block_HTML' );
+		tenup_register_content_block( 'ad', 'Ad', 'Emmis_Ad_Content_Block' );
+		tenup_register_content_block( 'embeds', 'Embeds', 'Emmis_Embeds_Content_Block' );
+		tenup_register_content_block( 'featured-grid', 'Featured Grid', 'Emmis_Featured_Grid_Content_Block' );
+		tenup_register_content_block( 'featured-item', 'Featured Item', 'Emmis_Featured_Item_Content_Block' );
+		tenup_register_content_block( 'featured', 'Featured List', 'Emmis_Featured_Items_Content_Block', array( 'widget' => true ) );
+		tenup_register_content_block( 'feed', 'Feed', 'Emmis_Feed_Content_Block' );
+		tenup_register_content_block( 'gallery', 'Gallery', 'Emmis_Gallery_Content_Block' );
+		tenup_register_content_block( 'images', 'Images', 'Emmis_Featured_Images_Content_Block' );
+		tenup_register_content_block( 'list', 'Ordered List', 'Emmis_Lists_Content_Block' );
+		tenup_register_content_block( 'listing-search', 'Listing Search', 'Emmis_Listing_Search_Content_Block', array( 'widget' => true ) );
+		tenup_register_content_block( 'restaurant-search', 'Restaurant Search', 'Emmis_Restaurant_Search_Content_Block', array( 'widget' => true ) );
+		tenup_register_content_block( 'newsletter', 'Newsletter', 'Emmis_Newsletter_Content_Block', array( 'widget' => true ) );
+		tenup_register_content_block( 'round-about', 'Featured Row', 'Emmis_Round_About_Content_Block' );
+		tenup_register_content_block( 'section-header', 'Section Header', 'Emmis_Section_Header_Content_Block' );
+		tenup_register_content_block( 'social', 'Social', 'Emmis_Social_Content_Block', array( 'widget' => true ) );
+		tenup_register_content_block( 'twitter', 'Twitter Widget', 'Emmis_Twitter_Content_Block' );
+		tenup_register_content_block( 'user-favorites', 'User Favorites', 'Emmis_User_Favorites_Content_Block' );
 	}
 
 	public function admin_enqueue_scripts() {
@@ -70,22 +87,24 @@ class Sample_Content_Block_Areas {
 		wp_nonce_field( 'tenup-save-content-blocks', $name = 'tenup_content_blocks_nonce' );
 	?>
 
-		<div class="content-blocks-wrapper">
+		<div class="content-blocks-wrapper sortable">
 		<?php if ( ! empty( $rows ) ) :
 			foreach ( (array) $rows as $row => $areas ) :
 				foreach ( (array) $areas as $area => $columns ) :
 					$registered_rows = tenup_get_registered_rows();
 					if ( isset( $registered_rows[ $area ] ) ) :
 						$cols = $registered_rows[ $area ]['cols'];
+						$row_name = isset( $areas[ $area ]['row_name'] ) ? $areas[ $area ]['row_name'] : $registered_rows[ $area ]['name'];
 	?>
 
 						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
-								<!--<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>-->
-								<?php echo esc_html( $registered_rows[ $area ]['name'] ); ?>
+								<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
+								<input type="text" name="<?php echo esc_attr( $area ); ?>-<?php echo esc_attr( $row ); ?>" value="<?php echo esc_attr( $row_name ); ?>">
 								<a href="#" class="delete-row">Delete</a>
 							</h3>
 
+							<?php unset( $columns['row_name'] ); ?>
 							<?php if ( count( (array) $columns ) === $cols ) : ?>
 								<?php foreach ( (array) $columns as $column => $blocks ) : ?>
 									<div class="block" data-tenup-column="<?php echo esc_attr( $column ); ?>">
@@ -165,6 +184,10 @@ class Sample_Content_Block_Areas {
 					<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
 					<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
 					<a href="#" class="delete-content-block">Delete</a>
+					<div class="pause">
+						<label for="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]">Pause</label>
+						<input type="checkbox" id="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" name="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" value="y" <?php isset( $data['pause'] ) ? checked( $data['pause'], 'y' ) : ''; ?>>
+					</div>
 				</h4>
 
 				<div class="interior">
@@ -242,6 +265,7 @@ class Sample_Content_Block_Areas {
 
 			foreach ( (array) $areas as $area => $columns ) {
 				$value[ $area ] = array();
+				$value[ $area ]['row_name'] = isset( $_POST[ $area . '-' . $row ] ) ? esc_html( $_POST[ $area . '-' . $row ] ) : '';
 
 				foreach ( (array) $columns as $column => $blocks ) {
 					$value[ $area ][ $column ] = array();
