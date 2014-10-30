@@ -1,22 +1,27 @@
-window.wp = window.wp || {};
+/*global quicktags*/
 
-(function($){
+// Ensure the global `wp` object exists.
+var wp = window.wp || {};
+
+( function( $ ) {
+	'use strict';
+
 	var frame,
 		$body = $('body');
 
 	// Sortable blocks
 	$( '.sortable' ).sortable({
-    	handle: '.handle',
-    	forcePlaceholderSize: true,
-    	items: "> div",
+		handle: '.handle',
+		forcePlaceholderSize: true,
+		items: "> div",
 		update: function( event, ui ) {
 			var target = $( event.target );
 			if ( target.hasClass( 'content-blocks-wrapper' ) ) {
-				$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+				$( "[name^='ccb_content_blocks[']" ).each( function( i ) {
 					var $this = $( this ),
 						index = $this.parents( '.row' ).index(),
 						name = $this.attr( 'name' ),
-						replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
+						replacement = name.replace( /ccb_content_blocks\[[0-9]+\]/, 'ccb_content_blocks['+ index +']' );
 
 					$this.attr( 'name', replacement );
 				});
@@ -24,19 +29,19 @@ window.wp = window.wp || {};
 		}
     });
 
-    $body.on( 'click', '.content-block-adder .toggle', function(e){
-    	e.preventDefault();
-    	$(this).toggleClass( 'open' ).siblings( '.content-block-select' ).slideToggle( 'fast' );
-    })
+    $body.on( 'click', '.content-block-adder .toggle', function( e ) {
+		e.preventDefault();
+		$(this).toggleClass( 'open' ).siblings( '.content-block-select' ).slideToggle( 'fast' );
+    });
 
 	var cache = {};
 	$body.on( 'click', '.add-content-block', function(e){
 		var $this = $(this),
 			$adder = $this.closest('.content-block-adder'),
-			area = $adder.data('tenupArea'),
+			area = $adder.data('ccbArea'),
 			row = $this.parents( '.row' ).index(),
-			column = $this.parents( '.block' ).data( 'tenupColumn' ),
-			iterator = $adder.data('tenupIterator'),
+			column = $this.parents( '.block' ).data( 'ccbColumn' ),
+			iterator = $adder.data('ccbIterator'),
 			$toggle = $adder.find('.toggle'),
 			type = $this.siblings('[name=new_content_block]').val(),
 			template;
@@ -44,24 +49,20 @@ window.wp = window.wp || {};
 		if ( type in cache ) {
 			template = cache[type];
 		} else {
-			template = cache[type] = $('#tmpl-tenup-cb-' + type).html()
+			template = cache[type] = $('#tmpl-ccb-cb-' + type).html();
 		}
 
 		// Hard-coded instance of area support
-		template = template.replace( /\{{{area}}}/g, area );
-		template = template.replace( /\{{{row}}}/g, row );
-		template = template.replace( /\{{{column}}}/g, column );
-		template = template.replace( /\{{{iterator}}}/g, iterator );
-		$adder.data('tenupIterator', iterator + 1);
+		template = template.replace( /\{\{\{area\}\}\}/g, area );
+		template = template.replace( /\{\{\{row\}\}\}/g, row );
+		template = template.replace( /\{\{\{column\}\}\}/g, column );
+		template = template.replace( /\{\{\{iterator\}\}\}/g, iterator );
+		$adder.data('ccbIterator', iterator + 1);
 
-		var $added = $( template ).insertBefore($adder);
+		var $added = $( template ).insertBefore( $adder );
 		// Example of initializing a JS widget on add
-		$added.find( '.post-finder' ).postFinder();
-		$added.find( '.select2').select2({ width: 200 });
-		if ( 'html' === type ) {
-			var editor_id = $added.find( '.ckeditor' ).attr( 'id' );
-			CKEDITOR.replace( editor_id );
-		}
+		//$added.find( '.post-finder' ).postFinder();
+		//$added.find( '.select2').select2({ width: 200 });
 		if ( 'embeds' === type ) {
 			var editor_id = $added.find( '.wp-editor-area' ).attr( 'id' );
 			quicktags( editor_id );
@@ -84,11 +85,11 @@ window.wp = window.wp || {};
 	$body.on( 'click', '.delete-row', function( e ) {
 		$( this ).closest( '.row' ).remove();
 		e.preventDefault();
-		$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+		$( "[name^='ccb_content_blocks[']" ).each( function( i ) {
 			var $this = $( this ),
 				index = $this.parents( '.row' ).index(),
 				name = $this.attr( 'name' ),
-				replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
+				replacement = name.replace( /ccb_content_blocks\[[0-9]+\]/, 'ccb_content_blocks['+ index +']' );
 
 			$this.attr( 'name', replacement );
 		});
@@ -168,9 +169,6 @@ window.wp = window.wp || {};
 		$field.attr('value', '');
 	});
 
-	$( '.ccb-choose-row a' ).on( 'click', onClickAddNewRow );
-	$( '.delete-row' ).on( 'click', onClickRemoveRow );
-
 	function onClickAddNewRow( e ) {
 		e.preventDefault();
 
@@ -183,32 +181,57 @@ window.wp = window.wp || {};
 		if ( type in cache ) {
 			template = cache[type];
 		} else {
-			template = cache[type] = $( '#tmpl-tenup-cb-' + type ).html();
+			template = cache[type] = $( '#tmpl-ccb-cb-' + type ).html();
 		}
-		template = template.replace( /\{{{row}}}/g, ++row );
+		template = template.replace( /\{\{\{row\}\}\}/g, ++row );
 
 		$target.before( template );
 	}
 
 	function onClickRemoveRow( e ) {
 		e.preventDefault();
-		$( this ).closest( '.row' ).remove();
-		$( "[name^='tenup_content_blocks[']" ).each( function( i ) {
+		var $currentTarget = $( e.currentTarget );
+		$currentTarget.closest( '.row' ).remove();
+		$( "[name^='ccb_content_blocks[']" ).each( function( i ) {
 			var $this = $( this ),
 				index = $this.parents( '.row' ).index(),
 				name = $this.attr( 'name' ),
-				replacement = name.replace( /tenup_content_blocks\[[0-9]+\]/, 'tenup_content_blocks['+ index +']' );
+				replacement = name.replace( /ccb_content_blocks\[[0-9]+\]/, 'ccb_content_blocks['+ index +']' );
 
 			$this.attr( 'name', replacement );
 		});
 	}
 
-	$( document ).ready(function() {
-		$( '.select2' ).select2({ width: 200 });
-		$( '.ckeditor' ).each( function() {
-			var editor_id = $( this ).attr( 'id' );
-			CKEDITOR.replace( editor_id );
-		});
-	});
+	$( '.ccb-choose-row a' ).on( 'click', onClickAddNewRow );
+	$( '.delete-row' ).on( 'click', onClickRemoveRow );
 
-})(jQuery);
+	/*$( document ).ready(function() {
+		$( '.select2' ).select2({ width: 200 });
+	});*/
+
+	var $contentBlocks = $( '.content-blocks-wrapper' ),
+		editor = document.getElementById( 'postdivrich');
+
+	var pageCuration = {
+		'init': function() {
+			var $curatedInput = $( document.getElementById( 'ccb-curated-page' ) );
+			if ( $curatedInput.prop( 'checked' ) ) {
+				pageCuration.show();
+			}
+
+			$( document.getElementById( 'ccb-curated-page' ) ).on( 'click', pageCuration.toggle );
+		},
+
+		'show': function() {
+			$contentBlocks.show();
+			$( editor ).hide();
+		},
+
+		'toggle': function() {
+			$contentBlocks.toggle();
+			$( editor ).toggle();
+		}
+	};
+	$( document ).ready( pageCuration.init );
+
+})( jQuery );

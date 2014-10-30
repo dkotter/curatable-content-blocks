@@ -10,22 +10,22 @@ include_once( 'sample-integration.php' );
 include_once( 'class-content-block.php' );
 include_once( 'class-content-block-widget.php' );
 
-function tenup_register_row( $id, $name, $class, $cols ) {
+function ccb_register_row( $id, $name, $class, $cols ) {
 	global $tenup_content_blocks;
 	$tenup_content_blocks->register_row( $id, $name, $class, $cols );
 }
 
-function tenup_get_registered_rows( $args = array() ) {
+function ccb_get_registered_rows( $args = array() ) {
 	global $tenup_content_blocks;
 	return $tenup_content_blocks->get_rows( $args );
 }
 
-function tenup_register_content_block( $id, $name, $class, $args = array() ) {
+function ccb_register_content_block( $id, $name, $class, $args = array() ) {
 	global $tenup_content_blocks;
 	$tenup_content_blocks->register( $id, $name, $class, $args );
 }
 
-function tenup_get_registered_content_blocks( $args = array() ) {
+function ccb_get_registered_content_blocks( $args = array() ) {
 	global $tenup_content_blocks;
 	return $tenup_content_blocks->get( $args );
 }

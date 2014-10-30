@@ -1,6 +1,9 @@
 <?php
 
-class Tenup_Content_Block_Widget extends WP_Widget {
+/*
+ * Class Tenup_Content_Block_Widget
+ */
+class CCB_Content_Block_Widget extends WP_Widget {
 
 	/**
 	 * Type of content block. Will match a string in the registered content block array
@@ -11,9 +14,11 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 
 	/**
 	 * Register widget
+	 *
+	 * @param string $type Type of block
 	 */
 	function __construct( $type ) {
-		$registered_blocks = tenup_get_registered_content_blocks();
+		$registered_blocks = ccb_get_registered_content_blocks();
 		$this->_content_block_type = $type;
 
 		// not a registered block!
@@ -23,19 +28,32 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 
 		$name = $registered_blocks[ $this->_content_block_type ]['name'];
 
-		parent::__construct( 'tenup_content_block_' . $type, $name, array( 'description' => 'A widget for the ' . $name . ' content block' ) );
+		parent::__construct( 'ccb_content_block_' . $type, $name, array( 'description' => 'A widget for the ' . $name . ' content block' ) );
 	}
 
+	/*
+	 * Display the widget
+	 *
+	 * @param array $args Arguments for this widget.
+	 * @param array $instance Data saved in widget.
+	 * @return void
+	 */
 	public function widget( $args, $instance ) {
 		$block = isset( $instance['data'] ) ? $instance['data'] : false;
 
-		if ( function_exists( 'tenup_display_block' ) && false !== $block ) {
-			tenup_display_block( $block['type'], $block, 'widget' );
+		if ( function_exists( 'ccb_display_block' ) && false !== $block ) {
+			ccb_display_block( $block['type'], $block, 'widget' );
 		}
 	}
 
+	/*
+	 * Output the widget form.
+	 *
+	 * @param array $instance Instance of this widget.
+	 * @return void
+	 */
 	public function form( $instance ) {
-		$registered_blocks = tenup_get_registered_content_blocks();
+		$registered_blocks = ccb_get_registered_content_blocks();
 
 		$data = isset( $instance['data'] ) ? $instance['data'] : array();
 
@@ -44,14 +62,21 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 		}
 	}
 
+	/*
+	 * Save the widget data.
+	 *
+	 * @param array $new_instance New widget instance.
+	 * @param array $old_instance Original widget instance
+	 * @return array
+	 */
 	public function update( $new_instance, $old_instance ) {
-		if ( ! isset( $_POST['tenup_content_blocks'] ) ) {
+		if ( ! isset( $_POST['ccb_content_blocks'] ) ) {
 			return $old_instance;
 		}
 
-		$data = $_POST['tenup_content_blocks'][0]['widget'][0][0];
+		$data = $_POST['ccb_content_blocks'][0]['widget'][0][0];
 
-		$registered_blocks = tenup_get_registered_content_blocks();
+		$registered_blocks = ccb_get_registered_content_blocks();
 
 		if ( is_callable( array( $registered_blocks[ $this->_content_block_type ]['class'], 'clean_data' ) ) ) {
 			$data = $registered_blocks[ $this->_content_block_type ]['class']::clean_data( $data );
@@ -66,8 +91,13 @@ class Tenup_Content_Block_Widget extends WP_Widget {
 
 }
 
-function tenup_register_content_block_widget() {
-	$registered_blocks = tenup_get_registered_content_blocks();
+/*
+ * Register widgets for any blocks that have the widget setting as true.
+ *
+ * @return void
+ */
+function ccb_register_content_block_widget() {
+	$registered_blocks = ccb_get_registered_content_blocks();
 
 	/*
 	 * Yeah, this looks scary and dangerous because it uses eval() - All variable values passed to eval() are hard coded
@@ -83,14 +113,15 @@ function tenup_register_content_block_widget() {
 		if ( false == $args['widget'] ) {
 			continue;
 		}
+
 		$class_name = $args['class'];
 
 		$widget_class = $class_name . "_Widget";
 		// Was in separate var for easy debugging :)
-		$eval = "class $widget_class extends Tenup_Content_Block_Widget { public function __construct() { parent::__construct( '$block_type' ); } };";
+		$eval = "class $widget_class extends CCB_Content_Block_Widget { public function __construct() { parent::__construct( '$block_type' ); } };";
 		eval( $eval );
 
 		register_widget( $widget_class );
 	}
 }
-add_action( 'widgets_init', 'tenup_register_content_block_widget', 15 );
+add_action( 'widgets_init', 'ccb_register_content_block_widget', 15 );
