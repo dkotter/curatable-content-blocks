@@ -83,3 +83,59 @@ function ccb_display_block( $type, $block, $area ) {
 
 	return true;
 }
+
+/**
+ * Output curated rows and their associated blocks.
+ *
+ * @param array $rows Rows to output.
+ * @return void
+ */
+function ccb_display_rows( $rows ) {
+	if ( ! function_exists( 'ccb_display_block' ) ) {
+		return;
+	}
+
+	$rows = (array) $rows;
+
+	if ( ! empty( $rows ) ) {
+		foreach ( (array) $rows as $row => $areas ) {
+			foreach ( (array) $areas as $area => $columns ) {
+				$registered_rows = ccb_get_registered_rows();
+				if ( isset( $registered_rows[ $area ] ) ) : ?>
+
+					<div class="row">
+
+						<?php foreach ( (array) $columns as $column => $blocks ) : ?>
+							<?php if ( is_array( $blocks ) ) : ?>
+								<?php if ( 'col-2-3-1-3' === $registered_rows[ $area ]['class'] ) {
+									if ( 1 === $column ) {
+										$class = 'col-2-3';
+									} else {
+										$class = 'col-1-3';
+									}
+								} elseif ( 'col-1-3-2-3' === $registered_rows[ $area ]['class'] ) {
+									if ( 1 === $column ) {
+										$class = 'col-1-3';
+									} else {
+										$class = 'col-2-3';
+									}
+								} else {
+									$class = $registered_rows[ $area ]['class'];
+								} ?>
+								<div class="<?php echo esc_attr( $class ); ?>">
+									<?php foreach ( $blocks as $data ) {
+										if ( isset( $data['type'] ) ) {
+											ccb_display_block( $data['type'], $data, $area );
+										}
+									} ?>
+								</div><!-- .<?php echo esc_attr( $class ); ?> -->
+							<?php endif; ?>
+						<?php endforeach; ?>
+
+					</div><!-- .row -->
+
+				<?php endif;
+			}
+		}
+	}
+}

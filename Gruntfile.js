@@ -68,6 +68,7 @@ module.exports = function( grunt ) {
 		sass:   {
 			all: {
 				files: {
+					'assets/css/content_blocks_admin.css': 'assets/css/sass/content_blocks_admin.scss',
 					'assets/css/content_blocks.css': 'assets/css/sass/content_blocks.scss'
 				}
 			}

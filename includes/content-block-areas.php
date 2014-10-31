@@ -34,12 +34,46 @@ class CCB_Content_Block_Areas {
 	 * @return void
 	 */
 	function init() {
+		add_filter( 'template_include', array( $this, 'load_curated_template' ) );
 		add_action( 'after_setup_theme', array( $this, 'register_rows_blocks' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'post_submitbox_misc_actions', array( $this, 'curated_page_checkbox' ) );
 		add_action( 'edit_form_after_title', array( $this, 'output_blocks' ) );
 		add_action( 'save_post', array( $this, 'save_curated_page_value' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_blocks' ), 10, 2 );
+	}
+
+	/**
+	 * Maybe load the curated page template.
+	 *
+	 * @param string $original_template Current template that will be used.
+	 * @return string
+	 */
+	public function load_curated_template( $original_template ) {
+		global $post;
+
+		if ( post_type_supports( get_post_type( $post->ID ), 'ccb-content-blocks' ) && 'yes' === get_post_meta( $post->ID, 'ccb_curated_page', true ) ) {
+			return CCB_PATH . '/curated-page.php';
+		} else {
+			return $original_template;
+		}
+	}
+
+	/*
+	 * Enqueue the needed styles for the front end.
+	 *
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		global $post;
+
+		$postfix = ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
+
+		// Allowed for widgets and any post type with support for 'ccb-content-blocks'
+		if ( is_singular() && post_type_supports( get_post_type( $post->ID ), 'ccb-content-blocks' ) && 'yes' === get_post_meta( $post->ID, 'ccb_curated_page', true ) ) {
+			wp_enqueue_style( 'ccb-content-blocks', CCB_URL . "assets/css/content_blocks{$postfix}.css", array(), CCB_VERSION );
+		}
 	}
 
 	/*
@@ -78,10 +112,10 @@ class CCB_Content_Block_Areas {
 
 		// Allowed for widgets and any post type with support for 'ccb-content-blocks'
 		if ( ( 'post' === $screen->base && post_type_supports( $screen->post_type, 'ccb-content-blocks' ) ) || 'widgets' === $screen->base ) {
-			wp_enqueue_script( 'ccb-content-blocks', CCB_URL . "/assets/js/content_blocks{$postfix}.js", array( 'jquery', 'jquery-ui-sortable' ), CCB_VERSION, true );
-			//wp_enqueue_script( 'select2', CCB_URL . "/assets/js/vendor/select2{$postfix}.js", array(), '3.5.0' );
-			wp_enqueue_style( 'ccb-content-blocks', CCB_URL . "/assets/css/content_blocks{$postfix}.css", array(), CCB_VERSION );
-			//wp_enqueue_style( 'select2css', CCB_URL . '/assets/css/select2.css', array(), '3.5.0' );
+			wp_enqueue_script( 'ccb-content-blocks', CCB_URL . "assets/js/content_blocks{$postfix}.js", array( 'jquery', 'jquery-ui-sortable' ), CCB_VERSION, true );
+			//wp_enqueue_script( 'select2', CCB_URL . "assets/js/vendor/select2{$postfix}.js", array(), '3.5.0' );
+			wp_enqueue_style( 'ccb-content-blocks-admin', CCB_URL . "assets/css/content_blocks_admin.css", array(), CCB_VERSION );
+			//wp_enqueue_style( 'select2css', CCB_URL . 'assets/css/select2.css', array(), '3.5.0' );
 		}
 	}
 
@@ -161,7 +195,7 @@ class CCB_Content_Block_Areas {
 
 						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
-								<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
+								<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
 								<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 							</h3>
 
@@ -263,7 +297,7 @@ class CCB_Content_Block_Areas {
 	?>
 			<div class="content-block collapsed <?php echo esc_attr( $data['type'] ); ?>">
 				<h4 class="content-block-header">
-					<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
+					<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
 					<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
 					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					<div class="pause">

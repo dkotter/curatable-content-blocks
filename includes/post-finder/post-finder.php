@@ -18,8 +18,6 @@ class NS_Post_Finder {
 
 	/**
 	 * Setup hooks
-	 *
-	 * @return void
 	 */
 	function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
@@ -36,7 +34,7 @@ class NS_Post_Finder {
 
 		wp_enqueue_script(
 			'post-finder',
-			plugins_url( 'js/main.js', __FILE__ ),
+			CCB_URL . 'includes/post-finder/js/main.js',
 			array(
 				'jquery',
 				'jquery-ui-draggable',
@@ -55,7 +53,7 @@ class NS_Post_Finder {
 			)
 		);
 
-		wp_enqueue_style( 'post-finder', plugins_url( 'css/screen.css', __FILE__ ) );
+		wp_enqueue_style( 'post-finder', CCB_URL . 'includes/post-finder/css/screen.css' );
 	}
 
 	/**

@@ -1,19 +1,21 @@
-(function($) {
+(function( $ ) {
 	var cache = {};
 
-	$.postFinder = function(element, options) {
-		var defaults, mainTemplate, itemTemplate;
+	$.postFinder = function( element, options ) {
+		var defaults,
+			mainTemplate,
+			itemTemplate;
 
 		if ( 'mainTemplate' in cache ) {
 			mainTemplate = cache['mainTemplate'];
 		} else {
-			mainTemplate = cache['mainTemplate'] = $('#tmpl-post-finder-main').html()
+			mainTemplate = cache['mainTemplate'] = $( '#tmpl-post-finder-main' ).html();
 		}
 
 		if ( 'itemTemplate' in cache ) {
 			itemTemplate = cache['itemTemplate'];
 		} else {
-			itemTemplate = cache['itemTemplate'] = $('#tmpl-post-finder-item').html()
+			itemTemplate = cache['itemTemplate'] = $( '#tmpl-post-finder-item' ).html();
 		}
 
 		defaults = {
@@ -30,38 +32,37 @@
 
 		var plugin = this;
 
-		plugin.settings = {} //empty object to store extended settings
+		plugin.settings = {}; //empty object to store extended settings
 
-		var $element = $(element), //store jquery object of el
-			element = element; //store html el
+		var $element = $( element ); //store jquery object of el
 
 		plugin.init = function() {
 
 			// over write defaults with passed options
-			plugin.settings = $.extend({}, defaults, options);
+			plugin.settings = $.extend( {}, defaults, options );
 
 			// all jquery objects are fetched once and stored in the plugin object
-			plugin.$field = $element.find(plugin.settings.fieldSelector),
-			plugin.$select = $element.find(plugin.settings.selectSelector),
-			plugin.$list = $element.find(plugin.settings.listSelector),
-			plugin.$search = $element.find(plugin.settings.searchSelector),
-			plugin.$outsideSearch = $element.find(plugin.settings.outsideSelector),
-			plugin.$results = plugin.$search.find(plugin.settings.resultsSelector),
-			plugin.$query = plugin.$search.find(plugin.settings.querySelector),
-			plugin.nonce = $(plugin.settings.nonceSelector).val();
+			plugin.$field = $element.find( plugin.settings.fieldSelector );
+			plugin.$select = $element.find( plugin.settings.selectSelector );
+			plugin.$list = $element.find( plugin.settings.listSelector );
+			plugin.$search = $element.find( plugin.settings.searchSelector );
+			plugin.$outsideSearch = $element.find( plugin.settings.outsideSelector );
+			plugin.$results = plugin.$search.find( plugin.settings.resultsSelector );
+			plugin.$query = plugin.$search.find( plugin.settings.querySelector );
+			plugin.nonce = $( plugin.settings.nonceSelector ).val();
 
 			// bind select
-			plugin.$select.on('change', function(e){
-				plugin.add_item( $(this).val(), $('option:selected', this).text(), $('option:selected', this).data('permalink') );
+			plugin.$select.on( 'change', function() {
+				plugin.add_item( $( this ).val(), $( 'option:selected', this ).text(), $( 'option:selected', this ).data ('permalink' ) );
 			});
 
 			// bind search button
-			plugin.$search.find('.button').click(function(){
+			plugin.$search.find( '.button' ).click (function() {
 				plugin.search();
 			});
-			plugin.$search.keypress(function( e ){
-				if ( e.which == 13 ) {
-					event.preventDefault();
+			plugin.$search.keypress( function( e ) {
+				if ( e.which === 13 ) {
+					e.preventDefault();
 					plugin.search();
 				}
 			});
@@ -69,24 +70,24 @@
 			// bind list
 			plugin.$list.sortable({
 				placeholder: 'placeholder',
-				update: function(ui, e) {
+				update: function() {
 					plugin.serialize();
 				}
 			});
 
 			// remove button
-			plugin.$list.on('click', '.icon-remove', function(e){
+			plugin.$list.on( 'click', '.icon-remove', function( e ) {
 				e.preventDefault();
-				plugin.remove_item( $(this).closest('li').data('id') );
+				plugin.remove_item( $( this ).closest( 'li' ).data( 'id' ) );
 			});
 
 			// add button
-			plugin.$results.on('click', '.add', function(e){
+			plugin.$results.on( 'click', '.add', function( e ) {
 				e.preventDefault();
-				$li = $(this).closest('li');
-				plugin.add_item( $li.data('id'), $li.find('span').text(), $li.data('permalink') );
+				var $li = $( this ).closest( 'li' );
+				plugin.add_item( $li.data( 'id' ), $li.find( 'span' ).text(), $li.data( 'permalink' ) );
 			});
-			plugin.$outsideSearch.on('click', '.add', function(e){
+			plugin.$outsideSearch.on( 'click', '.add', function( e ) {
 				e.preventDefault();
 
 				var $textInput = plugin.$outsideSearch.find( '.outside-text' ),
@@ -99,16 +100,16 @@
 			});
 
 			// bind number inputs
-			plugin.$list.on('keypress', 'li input.position', function(e) {
-				if( e.which == 13 ) {
+			plugin.$list.on( 'keypress', 'li input.position', function( e ) {
+				if ( e.which === 13 ) {
 					e.preventDefault();
 					//plugin.move_item( $(this).closest('li'), $(this).val() );
-					$(this).trigger('blur');
+					$( this ).trigger( 'blur' );
 				}
 			});
 
-			plugin.$list.on('blur', 'li input.position', function(e){
-				plugin.move_item( $(this).closest('li'), $(this).val() );
+			plugin.$list.on( 'blur', 'li input.position', function() {
+				plugin.move_item( $( this ).closest( 'li' ), $( this ).val() );
 			});
 		};
 
@@ -119,14 +120,14 @@
 				len = $li.length,
 				$clone;
 
-			// has to be a position thats available
-			if( pos > len || pos < 1 ) {
+			// has to be a position that's available
+			if ( pos > len || pos < 1 ) {
 				alert( 'Please pick a position between 1 and ' + len );
 				return false;
 			}
 
-			// dont move it if were already there
-			if( ( pos - 1 ) == $el.index() ) {
+			// don't move it if were already there
+			if ( ( pos - 1 ) == $el.index() ) {
 				return false;
 			}
 
@@ -134,21 +135,21 @@
 			$clone = $el.clone();
 
 			// first position
-			if( pos == 1 ) {
+			if ( pos == 1 ) {
 
 				plugin.$list.prepend( $clone );
 
 				console.log( 'prepend li' );
 
 			// middle positions
-			} else if( pos > 1 && pos < len ) {
+			} else if ( pos > 1 && pos < len ) {
 
-				plugin.$list.find('li').eq( pos - 1 ).before( $clone );
+				plugin.$list.find( 'li' ).eq( pos - 1 ).before( $clone );
 
 				console.log( 'insert li after pos' );
 
 			// last position
-			} else if( pos == len ) {
+			} else if ( pos == len ) {
 
 				plugin.$list.append( $clone );
 
@@ -166,34 +167,35 @@
 		plugin.add_item = function( id, title, permalink ) {//private method
 
 			// make sure we have an id
-			if( id == 0 )
+			if ( id === 0 ) {
 				return;
+			}
 
-			if( plugin.$list.find('li').length >= $element.data('limit') ) {
-				alert('Sorry, maximum number of items added.');
+			if ( plugin.$list.find( 'li' ).length >= $element.data( 'limit' ) ) {
+				alert( 'Sorry, maximum number of items added.' );
 				return;
 			}
 
 			// see if item already exists
-			if( plugin.$list.find('li[data-id="' + id + '"]').length ) {
-				alert('Sorry, that item has already been added.');
+			if ( plugin.$list.find( 'li[data-id="' + id + '"]' ).length ) {
+				alert( 'Sorry, that item has already been added.' );
 				return;
 			}
 
 			// add item
-			plugin.$list.append(_.template(plugin.settings.template, {
+			plugin.$list.append( _.template( plugin.settings.template, {
 				id: id,
 				title: title,
 				edit_url: POST_FINDER_CONFIG.adminurl + 'post.php?post=' + id + '&action=edit',
 				permalink: permalink,
 				pos: plugin.$list.length + 1
-			}));
+			} ) );
 
 			// hide notice
-			plugin.$list.find('.notice').hide();
+			plugin.$list.find( '.notice' ).hide();
 
 			// remove from select if there
-			plugin.$select.find('option[value="' + id + '"]').remove();
+			plugin.$select.find( 'option[value="' + id + '"]' ).remove();
 
 			// update the input
 			plugin.serialize();
@@ -202,19 +204,19 @@
 		//Prv method to remove an item
 		plugin.remove_item = function( id ) {
 
-			plugin.$list.find('li[data-id="' + id + '"]').remove();
+			plugin.$list.find( 'li[data-id="' + id + '"]' ).remove();
 
 			plugin.serialize();
 
 			// show notice if no posts
-			if( plugin.$list.find('li').length == 0 ) {
-				plugin.$list.find('.notice').show();
+			if ( plugin.$list.find( 'li' ).length === 0 ) {
+				plugin.$list.find( '.notice' ).show();
 			}
 		};
 
 		plugin.search = function() {
 			var html = '',
-				args = $element.data('args'),
+				args = $element.data( 'args' ),
 				data = {
 					action: 'pf_search_posts',
 					s: plugin.$query.val(),
@@ -222,20 +224,20 @@
 				};
 
 			// merge the default args in
-			data = $.extend(data, $element.data('args'));
+			data = $.extend( data, $element.data( 'args' ) );
 
 			// display loading
-			plugin.$search.addClass('loading');
+			plugin.$search.addClass( 'loading' );
 
 			$.getJSON(
 				ajaxurl,
 				data,
-				function(response) {
-					if( typeof response.posts != "undefined" ) {
+				function( response ) {
+					if( typeof response.posts !== "undefined" ) {
 						for( var i in response.posts ) {
-							html += _.template(itemTemplate, response.posts[i]);
+							html += _.template( itemTemplate, response.posts[i] );
 						}
-						plugin.$results.html(html);
+						plugin.$results.html( html );
 					}
 				}
 			);
@@ -245,28 +247,27 @@
 
 			var ids = [], i = 1;
 
-			plugin.$list.find('li').each(function(){
-				$(this).find('input.position').val(i);
-				ids.push( $(this).data('id') );
+			plugin.$list.find( 'li' ).each( function() {
+				$( this ).find( 'input.position' ).val( i );
+				ids.push( $( this ).data( 'id' ) );
 				i++;
 			});
 
-			plugin.$field.val( ids.join(',') );
+			plugin.$field.val( ids.join( ',' ) );
 		};
 
 		plugin.init();
-
 	};
 
-	$.fn.postFinder = function(options) {
+	$.fn.postFinder = function( options ) {
 
-		return this.each(function() {
-			if (undefined == $(this).data('postFinder')) {
-				var plugin = new $.postFinder(this, options);
-				$(this).data('postFinder', plugin);
+		return this.each( function() {
+			if ( undefined === $( this ).data( 'postFinder' ) ) {
+				var plugin = new $.postFinder( this, options );
+				$( this ).data( 'postFinder', plugin );
 			}
 		});
 
-	};
+	}
 
-})(jQuery);
+})( jQuery );

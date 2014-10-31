@@ -41,12 +41,12 @@ abstract class CCB_Content_Block {
 			<script type="text/html" id="tmpl-ccb-cb-<?php echo esc_attr( $id ); ?>">
 				<div class="postbox row new <?php echo esc_attr( $class ); ?>">
 					<h3>
-						<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
+						<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
 						<?php echo esc_attr( $name ); ?>
 						<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					</h3>
 					<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>
-						<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+						<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 							<?php $ccb_content_block_areas->render_blocks( $id, $blocks ); ?>
 						</div>
 					<?php endfor; ?>
@@ -71,7 +71,7 @@ abstract class CCB_Content_Block {
 		?>
 			<div class="content-block <?php echo esc_attr( $id ); ?>">
 				<h4 class="content-block-header">
-					<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
+					<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
 					<?php echo esc_html( $name ); ?>
 					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 				</h4>
