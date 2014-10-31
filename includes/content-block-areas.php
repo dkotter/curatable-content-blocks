@@ -51,16 +51,16 @@ class CCB_Content_Block_Areas {
 	 */
 	public function register_rows_blocks() {
 		// Row registration
-		ccb_register_row( 'full', 'Full Width Column', 'col-1-1', array( 'columns' => 1 ) );
-		ccb_register_row( '2-col', 'Two Equal Columns', 'col-1-2', array( 'columns' => 2 ) );
-		ccb_register_row( '3-col', 'Three Equal Columns', 'col-1-3', array( 'columns' => 3 ) );
-		ccb_register_row( '4-col', 'Four Equal Columns', 'col-1-4', array( 'columns' => 4 ) );
-		ccb_register_row( '23-col', '2/3 - 1/3 Columns', 'col-2-3-1-3', array( 'columns' => 2 ) );
-		ccb_register_row( '13-col', '1/3 - 2/3 Columns', 'col-1-3-2-3', array( 'columns' => 2 ) );
+		ccb_register_row( 'full', __( 'Full Width Column', 'ccb' ), 'col-1-1', array( 'columns' => 1 ) );
+		ccb_register_row( '2-col', __( 'Two Equal Columns', 'ccb' ), 'col-1-2', array( 'columns' => 2 ) );
+		ccb_register_row( '3-col', __( 'Three Equal Columns', 'ccb' ), 'col-1-3', array( 'columns' => 3 ) );
+		ccb_register_row( '4-col', __( 'Four Equal Columns', 'ccb' ), 'col-1-4', array( 'columns' => 4 ) );
+		ccb_register_row( '23-col', __( '2/3 - 1/3 Columns', 'ccb' ), 'col-2-3-1-3', array( 'columns' => 2 ) );
+		ccb_register_row( '13-col', __( '1/3 - 2/3 Columns', 'ccb' ), 'col-1-3-2-3', array( 'columns' => 2 ) );
 
 		// Content block registration
-		ccb_register_content_block( 'html', 'Text/HTML', 'CCB_Content_Block_HTML' );
-		ccb_register_content_block( 'embeds', 'Embeds', 'CCB_Embeds_Content_Block' );
+		ccb_register_content_block( 'html', __( 'Text/HTML', 'ccb' ), 'CCB_Content_Block_HTML' );
+		ccb_register_content_block( 'embeds', __( 'Embeds', 'ccb' ), 'CCB_Embeds_Content_Block' );
 
 		// TO-DO: Remove some of these
 		/*ccb_register_content_block( 'ad', 'Ad', 'Emmis_Ad_Content_Block' );
@@ -114,7 +114,7 @@ class CCB_Content_Block_Areas {
 		$curated = ( 'yes' === get_post_meta( get_the_ID(), 'ccb_curated_page', true ) ) ? 'yes' : '';
 	?>
 		<div id="curated-page" class="misc-pub-section">
-			<label for="ccb-curated-page"><strong>Curated Page?</strong>&nbsp;</label>
+			<label for="ccb-curated-page"><strong><?php esc_html_e( 'Curated Page', 'ccb' ); ?>?</strong>&nbsp;</label>
 			<input id="ccb-curated-page" type="checkbox" value="yes" name="ccb-curated-page" <?php checked( 'yes', $curated ); ?> />
 		</div>
 	<?php
@@ -176,7 +176,7 @@ class CCB_Content_Block_Areas {
 						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
 								<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
-								<a href="#" class="delete-row">Delete</a>
+								<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 							</h3>
 
 							<?php if ( count( (array) $columns ) === $cols ) : ?>
@@ -207,7 +207,7 @@ class CCB_Content_Block_Areas {
 		endif;
 	?>
 
-			<h3 class="ccb-add"><i class="dashicons dashicons-plus"></i> Add New Row</h3>
+			<h3 class="ccb-add"><i class="dashicons dashicons-plus"></i> <?php esc_html_e( 'Add New Row', 'ccb' ); ?></h3>
 			<div class="ccb-menu postbox">
 				<div class="ccb-menu-pane">
 					<ul class="ccb-choose-row">
@@ -279,9 +279,9 @@ class CCB_Content_Block_Areas {
 				<h4 class="content-block-header">
 					<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
 					<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
-					<a href="#" class="delete-content-block">Delete</a>
+					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					<div class="pause">
-						<label for="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]">Pause</label>
+						<label for="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]"><?php esc_html_e( 'Pause', 'ccb' ); ?></label>
 						<input type="checkbox" id="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" name="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" value="y" <?php if ( isset( $data['pause'] ) ) { checked( $data['pause'], 'y' ); } ?>>
 					</div><!-- .pause -->
 				</h4>
@@ -305,7 +305,7 @@ class CCB_Content_Block_Areas {
 	private function adder( $area, $iterator = 0, $block_args = array() ) {
 	?>
 	<div class="content-block-adder" data-ccb-area="<?php echo esc_attr( $area ); ?>" data-ccb-iterator="<?php echo esc_attr( $iterator ); ?>">
-		<a class="toggle" href="#">Add block</a>
+		<a class="toggle" href="#"><?php esc_html_e( 'Add block', 'ccb' ); ?></a>
 		<div class="content-block-select hide-if-js">
 			<select name="new_content_block">
 				<?php foreach( ccb_get_registered_content_blocks( $block_args ) as $id => $block ) : ?>

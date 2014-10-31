@@ -43,7 +43,7 @@ abstract class CCB_Content_Block {
 					<h3>
 						<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
 						<?php echo esc_attr( $name ); ?>
-						<a href="#" class="delete-row">Delete</a>
+						<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					</h3>
 					<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>
 						<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
@@ -73,7 +73,7 @@ abstract class CCB_Content_Block {
 				<h4 class="content-block-header">
 					<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
 					<?php echo esc_html( $name ); ?>
-					<a href="#" class="delete-content-block">Delete</a>
+					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 				</h4>
 
 				<div class="interior">
