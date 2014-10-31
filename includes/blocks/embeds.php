@@ -43,8 +43,8 @@ class CCB_Embeds_Content_Block extends CCB_Content_Block {
 		$new = array();
 
 		$new['pause']   = isset( $data['pause'] ) ? 'y' : '';
-		$new['type']    = sanitize_key( $data['type'] );
-		$new['title']   = isset( $data['title'] ) ? wp_filter_post_kses( $data['title'] ) : '';
+		$new['type']    = 'embeds';
+		$new['title']   = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
 		$new['content'] = isset( $data['content'] ) ? wp_filter_post_kses( $data['content'] ) : '';
 
 		return $new;

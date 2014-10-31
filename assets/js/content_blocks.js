@@ -106,19 +106,25 @@ var wp = window.wp || {};
 		$toggle.siblings( '.manual' ).slideToggle( 'fast' );
 	});
 
-	// Media uploader
-	$body.on( 'click', '.select-image', function(e) {
-		var $this = $(this),
-			$image = $this.siblings('img'),
-			$field = $this.siblings('.image-id-input');
-
+	// Image Asset "Add Image" Button
+	$body.on( 'click', 'p .add-image', function( e ) {
 		e.preventDefault();
 
-		// If the media frame already exists, reopen it.
-		if ( frame ) {
-			frame.open();
-			return;
-		}
+		var $this = $( this ),
+			template = $this.siblings( '.image-template' ).html(),
+			$container = $this.parent().parent().find( '.image-container' );
+
+		$container.append( template );
+	});
+
+	// Media uploader
+	$body.on( 'click', '.select-img', function( e ) {
+		var $this = $( this ),
+			$image = $this.siblings( 'img' ),
+			$field = $this.siblings( '.image-id-input' ),
+			frame;
+
+		e.preventDefault();
 
 		// Create the media frame.
 		frame = wp.media.frames.chooseImage = wp.media({
@@ -140,9 +146,9 @@ var wp = window.wp || {};
 		// When an image is selected, run a callback.
 		frame.on( 'select', function() {
 			// Grab the selected attachment.
-			var attachment = frame.state().get('selection').first(),
-				sizes = attachment.get('sizes'),
-				imageUrl = attachment.get('url');
+			var attachment = frame.state().get( 'selection' ).first(),
+				sizes = attachment.get( 'sizes' ),
+				imageUrl = attachment.get( 'url' );
 
 			// Use thumbnail size if abailable for preview
 			if ( "undefined" !== typeof sizes.thumbnail ) {
@@ -150,24 +156,20 @@ var wp = window.wp || {};
 			}
 
 			// set the hidden input's value
-			$field.attr('value', attachment.id);
+			$field.attr( 'value', attachment.id );
 
 			// Show the image in the placeholder
-			$image.attr('src', imageUrl);
+			$image.attr( 'src', imageUrl );
 		});
 
 		frame.open();
 	});
 
-	$body.on( 'click', '.remove-image', function(e) {
-		var $this = $(this),
-			$image = $this.siblings('img'),
-			$field = $this.siblings('.image-id-input');
-
+	// Image Asset "Delete Image" Link
+	$body.on( 'click', '.delete-image', function( e ){
 		e.preventDefault();
 
-		$image.attr('src', '');
-		$field.attr('value', '');
+		$( this ).parents( '.image' ).remove();
 	});
 
 	function onClickAddNewRow( e ) {

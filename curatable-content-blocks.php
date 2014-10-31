@@ -65,6 +65,9 @@ class CCB_Init {
 
 		// All functionality related to adding/saving content blocks and rows.
 		require_once( CCB_PATH . 'includes/content-block-areas.php' );
+
+		// Post Finder
+		require_once( CCB_PATH . 'includes/post-finder/post-finder.php' );
 	}
 
 	/**

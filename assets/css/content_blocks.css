@@ -195,6 +195,56 @@
   .content-block .delete-row {
     color: red;
     font-size: .9em; }
+  .content-block.images .add-image {
+    position: relative;
+    padding-left: 25px;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 1em; }
+    .content-block.images .add-image:focus {
+      outline: none; }
+    .content-block.images .add-image:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAyODQgMjg0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPg0KICAgICAgICA8Y2lyY2xlIGlkPSJPdmFsLTEiIHN0cm9rZT0iIzAwNzRBMiIgc3Ryb2tlLXdpZHRoPSIxOSIgY3g9IjE0MiIgY3k9IjE0MiIgcj0iMTMyIj48L2NpcmNsZT4NCiAgICAgICAgPHBhdGggZD0iTTcwLjkzNzUsMTU0LjQwNjI1IEw3MC45Mzc1LDEzMC43ODEyNSBMMTMyLjI1LDEzMC43ODEyNSBMMTMyLjI1LDY5LjA0Njg3NSBMMTU2LjI5Njg3NSw2OS4wNDY4NzUgTDE1Ni4yOTY4NzUsMTMwLjc4MTI1IEwyMTcuNjA5Mzc1LDEzMC43ODEyNSBMMjE3LjYwOTM3NSwxNTQuNDA2MjUgTDE1Ni4yOTY4NzUsMTU0LjQwNjI1IEwxNTYuMjk2ODc1LDIxNiBMMTMyLjI1LDIxNiBMMTMyLjI1LDE1NC40MDYyNSBMNzAuOTM3NSwxNTQuNDA2MjUgWiIgaWQ9IisiIGZpbGw9IiMwMDc0QTIiPjwvcGF0aD4NCiAgICA8L2c+DQo8L3N2Zz4=) no-repeat center;
+      background-size: 18px 18px;
+      content: '';
+      -webkit-transition: -webkit-transform .2s ease;
+      transition: transform .2s ease; }
+  .content-block.images .image-container {
+    margin-bottom: 1em; }
+    .content-block.images .image-container:before, .content-block.images .image-container:after {
+      content: " ";
+      /* 1 */
+      display: table;
+      /* 2 */ }
+    .content-block.images .image-container:after {
+      clear: both; }
+  .content-block.images .button {
+    max-width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block; }
+  .content-block.images .delete-image {
+    color: red;
+    margin-top: 0.75em;
+    display: block; }
+  .content-block.images .image {
+    float: left;
+    width: 150px;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    text-align: center; }
+    .content-block.images .image img {
+      width: 150px;
+      height: 150px;
+      /* Match images with no source (When image hasn't been selected yet) and give them a border, so things don't look strange */ }
+      .content-block.images .image img img[src=""] {
+        border: 1px solid; }
 
 .content-block-header {
   margin: 0;

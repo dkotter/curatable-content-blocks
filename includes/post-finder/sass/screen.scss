@@ -1,0 +1,118 @@
+@import "compass/css3";
+@import "icons";
+
+.post-finder {
+
+	/*max-width: 600px;*/
+
+	.list {
+
+		.notice {
+			text-align: center;
+			margin: 0;
+		}
+
+		background: #eee;
+		margin: 0;
+		padding: 1em;
+		border: 1px solid #ccc;
+		margin-bottom: 1em;
+
+		li {
+			border: 1px solid #ccc;
+			@include border-radius(0.75em);
+			@include background(linear-gradient(top, #eee, #ddd));
+			cursor: move;
+			margin-bottom: 1em;
+			list-style: none;
+			margin-left: 55px;
+			text-align: left;
+			position: relative;
+			height: 40px;
+			padding: 0.5em;
+			padding-right: 70px;
+			@include box-sizing(border-box);
+
+			input[type=text] {
+				position: absolute;
+				margin-left: -65px;
+				text-align: center;
+				padding: 2px 3px;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		span {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			float: left;
+			width: 100%;
+			margin-top: 4px;
+		}
+
+		nav {
+			position: absolute;
+			right: 0.5em;
+			top: 50%;
+			font-size: 14px;
+			margin-top: -7px;
+
+			a {
+				margin-right: 0.5em;
+				color: #999;
+				text-decoration: none;
+
+
+				&:last-child {
+					margin: 0;
+				}
+
+				&:hover {
+					color: #666;
+				}
+			}
+		}
+	}
+
+	select {
+		max-width: 100%;
+	}
+
+	&.no-numbers {
+
+		.list li {
+			margin-left: 0;
+		}
+
+		.list li input[type=text] {
+			display: none;
+		}
+	}
+
+	.search {
+		
+		background: none;
+
+		input {
+			width: 100%;
+			max-width: 400px;
+			margin-right: 1em;
+		}
+	}
+
+	.results {
+
+		li {
+			padding: 0.5em 1em;
+			border-bottom: 1px dotted #ccc;
+		}
+
+		a {
+			float: right;
+		}
+	}
+}

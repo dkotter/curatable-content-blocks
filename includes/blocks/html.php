@@ -28,7 +28,7 @@ class CCB_Content_Block_HTML extends CCB_Content_Block {
 			<?php
 			$editor_content = isset( $data['content'] ) ? $data['content'] : '';
 			$editor_id = 'ccb_content_blocks['. esc_attr( $row ) .']['. esc_attr( $area ) .']['. esc_attr( $column ) .']['. esc_attr( $iterator ) .'][content]'; ?>
-			<textarea name="<?php echo esc_attr( $editor_id ); ?>" id="<?php echo esc_attr( $editor_id ); ?>" class="widefat"><?php echo $editor_content; ?></textarea>
+			<textarea name="<?php echo esc_attr( $editor_id ); ?>" id="<?php echo esc_attr( $editor_id ); ?>" class="widefat"><?php echo esc_textarea( $editor_content ); ?></textarea>
 		</p>
 	<?php
 	}
@@ -43,8 +43,8 @@ class CCB_Content_Block_HTML extends CCB_Content_Block {
 		$new = array();
 
 		$new['pause']   = isset( $data['pause'] ) ? 'y' : '';
-		$new['type']    = sanitize_key( $data['type'] );
-		$new['title']   = isset( $data['title'] ) ? wp_filter_post_kses( $data['title'] ) : '';
+		$new['type']    = 'html';
+		$new['title']   = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
 		$new['content'] = isset( $data['content'] ) ? wp_filter_post_kses( $data['content'] ) : '';
 
 		return $new;

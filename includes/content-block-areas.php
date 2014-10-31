@@ -1,10 +1,8 @@
 <?php
 /**
- * This is a sample of how content blocks were integrated into the
- * editing experience by way of curatable "areas" that contain
- * content blocks. Note that areas a really an integral part of the
- * code, as some routines and JS depend on them, but have not been
- * truly decoupled just yet.
+ * Register the default rows and blocks we want, as well
+ * as outputting any saved rows/blocks and the markup needed
+ * to add more.
  */
 class CCB_Content_Block_Areas {
 
@@ -59,26 +57,14 @@ class CCB_Content_Block_Areas {
 		ccb_register_row( '13-col', __( '1/3 - 2/3 Columns', 'ccb' ), 'col-1-3-2-3', array( 'columns' => 2 ) );
 
 		// Content block registration
-		ccb_register_content_block( 'html', __( 'Text/HTML', 'ccb' ), 'CCB_Content_Block_HTML' );
 		ccb_register_content_block( 'embeds', __( 'Embeds', 'ccb' ), 'CCB_Embeds_Content_Block' );
-
-		// TO-DO: Remove some of these
-		/*ccb_register_content_block( 'ad', 'Ad', 'Emmis_Ad_Content_Block' );
-		ccb_register_content_block( 'featured-grid', 'Featured Grid', 'Emmis_Featured_Grid_Content_Block' );
-		ccb_register_content_block( 'featured-item', 'Featured Item', 'Emmis_Featured_Item_Content_Block' );
-		ccb_register_content_block( 'featured', 'Featured List', 'Emmis_Featured_Items_Content_Block', array( 'widget' => true ) );
-		ccb_register_content_block( 'feed', 'Feed', 'Emmis_Feed_Content_Block' );
-		ccb_register_content_block( 'gallery', 'Gallery', 'Emmis_Gallery_Content_Block' );
-		ccb_register_content_block( 'images', 'Images', 'Emmis_Featured_Images_Content_Block' );
-		ccb_register_content_block( 'list', 'Ordered List', 'Emmis_Lists_Content_Block' );
-		ccb_register_content_block( 'listing-search', 'Listing Search', 'Emmis_Listing_Search_Content_Block', array( 'widget' => true ) );
-		ccb_register_content_block( 'restaurant-search', 'Restaurant Search', 'Emmis_Restaurant_Search_Content_Block', array( 'widget' => true ) );
-		ccb_register_content_block( 'newsletter', 'Newsletter', 'Emmis_Newsletter_Content_Block', array( 'widget' => true ) );
-		ccb_register_content_block( 'round-about', 'Featured Row', 'Emmis_Round_About_Content_Block' );
-		ccb_register_content_block( 'section-header', 'Section Header', 'Emmis_Section_Header_Content_Block' );
-		ccb_register_content_block( 'social', 'Social', 'Emmis_Social_Content_Block', array( 'widget' => true ) );
-		ccb_register_content_block( 'twitter', 'Twitter Widget', 'Emmis_Twitter_Content_Block' );
-		ccb_register_content_block( 'user-favorites', 'User Favorites', 'Emmis_User_Favorites_Content_Block' );*/
+		ccb_register_content_block( 'featured-item', __( 'Featured Item', 'ccb' ), 'CCB_Featured_Item_Content_Block' );
+		ccb_register_content_block( 'featured-list', __( 'Featured List', 'ccb' ), 'CCB_Featured_Items_Content_Block', array( 'widget' => true ) );
+		ccb_register_content_block( 'feed', __( 'Feed', 'ccb' ), 'CCB_Feed_Content_Block' );
+		ccb_register_content_block( 'html', __( 'Text/HTML', 'ccb' ), 'CCB_Content_Block_HTML' );
+		ccb_register_content_block( 'images', __( 'Images', 'ccb' ), 'CCB_Featured_Images_Content_Block' );
+		ccb_register_content_block( 'section-header', __( 'Section Header', 'ccb' ), 'CCB_Section_Header_Content_Block' );
+		ccb_register_content_block( 'twitter', __( 'Twitter Widget', 'ccb' ), 'CCB_Twitter_Content_Block' );
 	}
 
 	/*
@@ -90,7 +76,7 @@ class CCB_Content_Block_Areas {
 		$postfix = ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
 		$screen = get_current_screen();
 
-		// Allowed for post, widgets, and any post type with support for 'ccb-content-blocks'
+		// Allowed for widgets and any post type with support for 'ccb-content-blocks'
 		if ( ( 'post' === $screen->base && post_type_supports( $screen->post_type, 'ccb-content-blocks' ) ) || 'widgets' === $screen->base ) {
 			wp_enqueue_script( 'ccb-content-blocks', CCB_URL . "/assets/js/content_blocks{$postfix}.js", array( 'jquery', 'jquery-ui-sortable' ), CCB_VERSION, true );
 			//wp_enqueue_script( 'select2', CCB_URL . "/assets/js/vendor/select2{$postfix}.js", array(), '3.5.0' );
@@ -175,7 +161,7 @@ class CCB_Content_Block_Areas {
 
 						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
-								<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
+								<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
 								<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 							</h3>
 
@@ -277,7 +263,7 @@ class CCB_Content_Block_Areas {
 	?>
 			<div class="content-block collapsed <?php echo esc_attr( $data['type'] ); ?>">
 				<h4 class="content-block-header">
-					<span class="handle"><img src="<?php echo plugins_url( 'img/drag-handle.png', __FILE__ ); ?>" /></span>
+					<span class="handle"><img src="<?php echo CCB_URL . '/images/drag-handle.png'; ?>" /></span>
 					<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
 					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					<div class="pause">
