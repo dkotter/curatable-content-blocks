@@ -19,6 +19,17 @@ class CCB_Twitter_Content_Block extends CCB_Content_Block {
 	?>
 		<input type="hidden" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="twitter" />
 
+		<?php
+		/**
+		 * Fires before other fields are rendered.
+		 *
+		 * Allows easy addition of other fields.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_settings_form_twitter' );
+		?>
+
 		<p>
 			<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]"><?php esc_html_e( 'Title', 'ccb' ); ?></label>
 			<input type="text" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]" class="widefat" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>"/>
@@ -49,6 +60,19 @@ class CCB_Twitter_Content_Block extends CCB_Content_Block {
 		$new['widget_id'] = isset( $data['widget_id'] ) ? sanitize_text_field( $data['widget_id'] ) : '';
 		$new['height']    = isset( $data['height'] ) ? preg_replace( '/[^0-9]/', '', $data['height'] ) : ''; // Gets rid of non-numbers
 
+		/**
+		 * Filter the data being saved.
+		 *
+		 * Gives the ability to handle saving new fields
+		 * that might be added via the ccb_settings_form_{block} hook.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array $new The data we want to save.
+		 * @param array $data The data sent to us.
+		 */
+		$new = apply_filters( 'ccb_clean_data_twitter', $new, $data );
+
 		return $new;
 	}
 
@@ -60,6 +84,12 @@ class CCB_Twitter_Content_Block extends CCB_Content_Block {
 	 * @return void
 	 */
 	public static function display( $data, $area ) {
+		/*
+		 * Fires before the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_before_module_twitter' );
 	?>
 		<div class="module module-twitter">
 			<?php if ( isset( $data['title'] ) && '' !== trim( $data['title'] ) ) : ?>
@@ -71,5 +101,11 @@ class CCB_Twitter_Content_Block extends CCB_Content_Block {
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		</div><!-- .module-twitter -->
 	<?php
+		/*
+		 * Fires after the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_after_module_twitter' );
 	}
 }

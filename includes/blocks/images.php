@@ -19,6 +19,17 @@ class CCB_Featured_Images_Content_Block extends CCB_Content_Block {
 	?>
 		<input type="hidden" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="images" />
 
+		<?php
+		/**
+		 * Fires before other fields are rendered.
+		 *
+		 * Allows easy addition of other fields.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_settings_form_images' );
+		?>
+
 		<p>
 			<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]"><?php esc_html_e( 'Title', 'ccb' ); ?></label>
 			<input type="text" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]" class="widefat" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>"/>
@@ -80,6 +91,19 @@ class CCB_Featured_Images_Content_Block extends CCB_Content_Block {
 		$new['title'] = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
 		$new['posts'] = isset( $data['posts'] ) ? implode( ',', array_map( 'absint', $data['posts'] ) ) : '';
 
+		/**
+		 * Filter the data being saved.
+		 *
+		 * Gives the ability to handle saving new fields
+		 * that might be added via the ccb_settings_form_{block} hook.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array $new The data we want to save.
+		 * @param array $data The data sent to us.
+		 */
+		$new = apply_filters( 'ccb_clean_data_images', $new, $data );
+
 		return $new;
 	}
 
@@ -95,6 +119,13 @@ class CCB_Featured_Images_Content_Block extends CCB_Content_Block {
 			// If we don't have any images, gracefully fail
 			return;
 		}
+
+		/*
+		 * Fires before the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_before_module_images' );
 	?>
 		<div class="module module-images">
 			<?php if ( isset( $data['title'] ) && '' !== trim( $data['title'] ) ) : ?>
@@ -116,6 +147,12 @@ class CCB_Featured_Images_Content_Block extends CCB_Content_Block {
 			</ul>
 		</div><!-- .module.module-images -->
 	<?php
+		/*
+		 * Fires after the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_after_module_images' );
 	}
 
 }

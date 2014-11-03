@@ -103,6 +103,14 @@ function ccb_display_rows( $rows ) {
 				$registered_rows = ccb_get_registered_rows();
 				if ( isset( $registered_rows[ $area ] ) ) : ?>
 
+					<?php
+					/**
+					 * Fires before an individual row is rendered.
+					 *
+					 * @since 0.1.0
+					 */
+					do_action( 'ccb_before_row' ); ?>
+
 					<div class="row">
 
 						<?php foreach ( (array) $columns as $column => $blocks ) : ?>
@@ -122,17 +130,51 @@ function ccb_display_rows( $rows ) {
 								} else {
 									$class = $registered_rows[ $area ]['class'];
 								} ?>
-								<div class="<?php echo esc_attr( $class ); ?>">
+
+								<?php
+								/**
+								 * Fires before an individual block is rendered.
+								 *
+								 * @since 0.1.0
+								 */
+								do_action( 'ccb_before_block' ); ?>
+
+								<?php
+								/*
+								 * Filter the class name(s) used for an individual block.
+								 *
+								 * @since 0.1.0
+								 *
+								 * @param string $class Current class names.
+								 */
+								?>
+								<div class="<?php echo esc_attr( apply_filters( 'ccb_block_class', $class ) ); ?>">
 									<?php foreach ( $blocks as $data ) {
 										if ( isset( $data['type'] ) ) {
 											ccb_display_block( $data['type'], $data, $area );
 										}
 									} ?>
 								</div><!-- .<?php echo esc_attr( $class ); ?> -->
+
+								<?php
+								/**
+								 * Fires after an individual block is rendered.
+								 *
+								 * @since 0.1.0
+								 */
+								do_action( 'ccb_after_block' ); ?>
 							<?php endif; ?>
 						<?php endforeach; ?>
 
 					</div><!-- .row -->
+
+					<?php
+					/**
+					 * Fires after an individual row is rendered.
+					 *
+					 * @since 0.1.0
+					 */
+					do_action( 'ccb_after_row' ); ?>
 
 				<?php endif;
 			}

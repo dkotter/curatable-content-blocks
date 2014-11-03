@@ -19,6 +19,17 @@ class CCB_Featured_Item_Content_Block extends CCB_Content_Block {
 	?>
 		<input type="hidden" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="featured-item" />
 
+		<?php
+		/**
+		 * Fires before other fields are rendered.
+		 *
+		 * Allows easy addition of other fields.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_settings_form_featured-item' );
+		?>
+
 		<?php if ( class_exists( 'NS_Post_Finder' ) ) : ?>
 			<div class="hide-if-no-js" style="margin-top: 20px;">
 				<?php
@@ -49,6 +60,19 @@ class CCB_Featured_Item_Content_Block extends CCB_Content_Block {
 		$new['pause'] = isset( $data['pause'] ) ? 'y' : '';
 		$new['type']  = 'featured-item';
 		$new['post']  = isset( $data['post'] ) ? implode( ',', array_map( 'absint', explode( ',', $data['post'] ) ) ) : '';
+
+		/**
+		 * Filter the data being saved.
+		 *
+		 * Gives the ability to handle saving new fields
+		 * that might be added via the ccb_settings_form_{block} hook.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array $new The data we want to save.
+		 * @param array $data The data sent to us.
+		 */
+		$new = apply_filters( 'ccb_clean_data_featured-item', $new, $data );
 
 		return $new;
 	}
@@ -87,6 +111,12 @@ class CCB_Featured_Item_Content_Block extends CCB_Content_Block {
 	 * @return void
 	 */
 	public static function markup( $data ) {
+		/*
+		 * Fires before the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_before_module_featured-item' );
 	?>
 		<div class="module module-single-article">
 			<a href="<?php the_permalink(); ?>" class="story cover-story">
@@ -105,6 +135,12 @@ class CCB_Featured_Item_Content_Block extends CCB_Content_Block {
 			</div><!-- .cover-story-meta -->
 		</div><!-- .module.module-single-article -->
 	<?php
+		/*
+		 * Fires after the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_after_module_featured-item' );
 	}
 
 }

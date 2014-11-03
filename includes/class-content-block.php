@@ -48,9 +48,9 @@ abstract class CCB_Content_Block {
 					<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>
 						<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 							<?php $ccb_content_block_areas->render_blocks( $id, $blocks ); ?>
-						</div>
+						</div><!-- .block -->
 					<?php endfor; ?>
-				</div><!-- .<?php echo esc_attr( $class ); ?> -->
+				</div><!-- .postbox.row.new.<?php echo esc_attr( $class ); ?> -->
 			</script>
 		<?php
 		endif;
@@ -80,8 +80,8 @@ abstract class CCB_Content_Block {
 					<?php
 					static::settings_form( array(), '{{{area}}}', '{{{row}}}', '{{{column}}}', '{{{iterator}}}' );
 					?>
-				</div>
-			</div>
+				</div><!-- .interior -->
+			</div><!-- .content-block.<?php echo esc_attr( $id ); ?> -->
 			<?php
 			echo '</script>';
 		endif;

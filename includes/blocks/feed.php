@@ -18,6 +18,18 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 	public static function settings_form( $data, $area, $row = 1, $column = 1, $iterator = 0 ) {
 	?>
 		<input type="hidden" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][type]" value="feed" />
+
+		<?php
+		/**
+		 * Fires before other fields are rendered.
+		 *
+		 * Allows easy addition of other fields.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_settings_form_feed' );
+		?>
+
 		<p>
 			<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]"><?php esc_html_e( 'Title', 'ccb' ); ?></label>
 			<input type="text" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][title]" class="widefat" value="<?php echo isset( $data['title'] ) ? esc_attr( $data['title'] ) : ''; ?>"/>
@@ -118,6 +130,19 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 		$new['category']  = isset( $data['category'] ) && '-1' !== $data['category'] ? array_map( 'absint', $data['category'] ) : array();
 		$new['tag']       = isset( $data['tag'] ) && -1 !== $data['tag'] ? array_map( 'absint', $data['tag'] ) : array();
 
+		/**
+		 * Filter the data being saved.
+		 *
+		 * Gives the ability to handle saving new fields
+		 * that might be added via the ccb_settings_form_{block} hook.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array $new The data we want to save.
+		 * @param array $data The data sent to us.
+		 */
+		$new = apply_filters( 'ccb_clean_data_feed', $new, $data );
+
 		return $new;
 	}
 
@@ -191,6 +216,13 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 			}
 		}
 
+		/*
+		 * Fires before the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_before_module_feed' );
+
 		echo '<div class="module module-feed">';
 		if ( isset( $data['title'] ) && '' !== trim( $data['title'] ) ) {
 			echo '<h2>';
@@ -207,6 +239,13 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 			self::markup( $data );
 		}
 		echo '</ul></div><!-- .module.module-feed -->';
+
+		/*
+		 * Fires after the module markup is output.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'ccb_after_module_feed' );
 
 		wp_reset_postdata();
 	}
