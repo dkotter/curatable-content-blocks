@@ -181,3 +181,103 @@ function ccb_display_rows( $rows ) {
 		}
 	}
 }
+
+/**
+ * Retrieves a template part.
+ *
+ * Taken mostly from bbPress. Will either load
+ * the template or return the path.
+ *
+ * @since 0.1.0
+ *
+ * @param string $slug The template slug.
+ * @param string $name Optional. Template name. Default null
+ * @param bool $load Optional. Load template or just return path. Default is to load the template.
+ * @return string
+ */
+function ccb_get_template_part( $slug, $name = null, $load = true ) {
+	/**
+	 * Fires before the template is found.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string $slug Slug of template.
+	 * @param string $name Name of template.
+	 */
+	do_action( "ccb_get_template_part_{$slug}", $slug, $name );
+
+	$templates = array();
+	if ( isset( $name ) ) {
+		$templates[] = $slug . '-' . $name . '.php';
+	}
+	$templates[] = $slug . '.php';
+
+	/*
+	 * Filter the template parts before loading
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $templates Templates we want to load.
+	 * @param string $slug Slug of template to load.
+	 * @param string $name Name of template to load.
+	 */
+	$templates = apply_filters( 'rcp_get_template_part', $templates, $slug, $name );
+
+	// Return the part that is found
+	return ccb_locate_template( $templates, $load, false );
+}
+
+/**
+ * Retrieve the name of the highest priority template file that exists.
+ *
+ * Searches in the STYLESHEETPATH before TEMPLATEPATH so that themes which
+ * inherit from a parent theme can just overload one file. If the template is
+ * not found in either of those, it looks in the plugin last.
+ *
+ * Taken from bbPress
+ *
+ * @since 0.0.1
+ *
+ * @param string|array $template_names Template file(s) to search for, in order.
+ * @param bool $load If true the template file will be loaded if it is found.
+ * @param bool $require_once Whether to require_once or require. Default true.
+ *                           Has no effect if $load is false.
+ * @return string The template filename if one is located.
+ */
+function ccb_locate_template( $template_names, $load = false, $require_once = true ) {
+	$located = false;
+
+	// Try to find a template file
+	foreach ( (array) $template_names as $template_name ) {
+
+		// Continue if template is empty
+		if ( empty( $template_name ) ) {
+			continue;
+		}
+
+		// Trim off any slashes from the template name
+		$template_name = ltrim( $template_name, '/' );
+
+		// Check child theme first
+		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $template_name ) ) {
+			$located = trailingslashit( get_stylesheet_directory() ) . $template_name;
+			break;
+
+			// Check parent theme next
+		} elseif ( file_exists( trailingslashit( get_template_directory() ) . $template_name ) ) {
+			$located = trailingslashit( get_template_directory() ) . $template_name;
+			break;
+
+			// Check plugin last
+		} elseif ( file_exists( CCB_PATH ) . $template_name ) {
+			$located = CCB_PATH . $template_name;
+			break;
+		}
+	}
+
+	if ( ( true === $load ) && ! empty( $located ) ) {
+		load_template( $located, $require_once );
+	}
+
+	return $located;
+}

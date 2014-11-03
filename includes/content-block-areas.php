@@ -54,7 +54,7 @@ class CCB_Content_Block_Areas {
 		global $post;
 
 		if ( post_type_supports( get_post_type( $post->ID ), 'ccb-content-blocks' ) && 'yes' === get_post_meta( $post->ID, 'ccb_curated_page', true ) ) {
-			return CCB_PATH . '/curated-page.php';
+			return ccb_get_template_part( 'curated-page' );
 		} else {
 			return $original_template;
 		}
