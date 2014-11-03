@@ -42,7 +42,7 @@ abstract class CCB_Content_Block {
 				<div class="postbox row new <?php echo esc_attr( $class ); ?>">
 					<h3>
 						<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
-						<?php echo esc_attr( $name ); ?>
+						<?php echo esc_html( $name ); ?>
 						<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					</h3>
 					<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>

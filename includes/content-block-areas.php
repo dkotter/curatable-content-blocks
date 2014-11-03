@@ -196,6 +196,7 @@ class CCB_Content_Block_Areas {
 						<div class="postbox row <?php echo esc_attr( $registered_rows[ $area ]['class'] ); ?>">
 							<h3>
 								<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
+								<?php echo esc_html( $registered_rows[ $area ]['name'] ); ?>
 								<a href="#" class="delete-row"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 							</h3>
 
