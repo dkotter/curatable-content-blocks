@@ -39,7 +39,7 @@ var wp = window.wp || {};
 
     $body.on( 'click', '.content-block-adder .toggle', function( e ) {
 		e.preventDefault();
-		$(this).toggleClass( 'open' ).siblings( '.content-block-select' ).slideToggle( 'fast' );
+		$( this ).toggleClass( 'open' ).siblings( '.content-block-select' ).slideToggle( 'fast' );
     });
 
 	var cache = {};
@@ -82,12 +82,36 @@ var wp = window.wp || {};
 		e.preventDefault();
 	});
 
-	$body.on('click', '.content-block-header', function(e){
-		$(this).parent('.content-block').toggleClass('collapsed');
+	$body.on( 'click', '.content-block-header', function( e ) {
+		var $target = $( e.currentTarget ),
+			$block = $target.parent( '.content-block' ),
+			css = { 'z-index': 100 },
+			targetWidth = 370,
+			blockWidth,
+			margin;
+
+		if ( $block.hasClass( 'collapsed' ) ) {
+			blockWidth = $block.parent().width();
+			if ( ( targetWidth + 30 > blockWidth ) ) {
+				if ( $block.closest( '.block' ).data( 'ccbColumn' ) === 1 ) {
+					margin = 'margin-right';
+				} else if ( $block.closest( '.block' ).data( 'ccbColumn' ) === 2 && $block.closest( '.row' ).hasClass( 'col-1-4' ) ) {
+					margin = 'margin-right';
+				} else {
+					margin = 'margin-left';
+				}
+				css[ margin ] = blockWidth - ( targetWidth + 30 ) + 'px';
+				$block.css( css );
+			}
+			$block.removeClass( 'collapsed' );
+		} else {
+			$block.attr( 'style', '' );
+			$block.addClass( 'collapsed' );
+		}
 	});
 
-	$body.on('click', '.delete-content-block', function(e){
-		$(this).closest('.content-block').remove();
+	$body.on( 'click', '.delete-content-block', function( e ) {
+		$( this ).closest( '.content-block' ).remove();
 		e.preventDefault();
 	});
 
