@@ -1,8 +1,7 @@
 <?php
 /**
- * Handle registration and grabbing of rows.
+ * Handle registration and grabbing of blocks.
  */
-
 class CCB_Blocks extends CCB_Template {
 
 	/*
@@ -38,6 +37,18 @@ class CCB_Blocks extends CCB_Template {
 		);
 
 		return true;
+	}
+
+	/*
+	 * Deregister a block.
+	 *
+	 * @param string $id ID for row.
+	 * @return void
+	 */
+	public function deregister( $id ) {
+		if ( array_key_exists( $id, $this->blocks ) ) {
+			unset( $this->blocks[ $id ] );
+		}
 	}
 
 	/*

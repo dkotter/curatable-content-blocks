@@ -9,12 +9,23 @@
  * @param string $id ID of row.
  * @param string $name Name of the row.
  * @param string $class Class name(s) for row.
- * @param int $cols Number of columns row has.
+ * @param array $args Optional arguments, like columns.
  * @return void
  */
-function ccb_register_row( $id, $name, $class, $cols ) {
+function ccb_register_row( $id, $name, $class, $args = array() ) {
 	global $ccb_rows;
-	$ccb_rows->register( $id, $name, $class, $cols );
+	$ccb_rows->register( $id, $name, $class, $args );
+}
+
+/*
+ * Deregister a row.
+ *
+ * @param string $id ID of row.
+ * @return void
+ */
+function ccb_deregister_row( $id ) {
+	global $ccb_rows;
+	$ccb_rows->deregister( $id );
 }
 
 /*
@@ -40,6 +51,17 @@ function ccb_get_registered_rows( $args = array() ) {
 function ccb_register_content_block( $id, $name, $class, $args = array() ) {
 	global $ccb_blocks;
 	$ccb_blocks->register( $id, $name, $class, $args );
+}
+
+/*
+ * Deregister a content block.
+ *
+ * @param string $id ID of row.
+ * @return void
+ */
+function ccb_deregister_block( $id ) {
+	global $ccb_blocks;
+	$ccb_blocks->deregister( $id );
 }
 
 /*

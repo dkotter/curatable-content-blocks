@@ -38,6 +38,12 @@ class CCB_Template {
 	}
 
 	/*
+	 * Default deregister function. Overridden in other classes.
+	 */
+	public function deregister( $id ) {
+	}
+
+	/*
 	 * Default get function. Overridden in other classes.
 	 */
 	public function get( $args = array() ) {

@@ -2,7 +2,6 @@
 /**
  * Handle registration and grabbing of rows.
  */
-
 class CCB_Rows extends CCB_Template {
 
 	/*
@@ -26,6 +25,18 @@ class CCB_Rows extends CCB_Template {
 		);
 
 		return true;
+	}
+
+	/*
+	 * Deregister a row.
+	 *
+	 * @param string $id ID for row.
+	 * @return void
+	 */
+	public function deregister( $id ) {
+		if ( array_key_exists( $id, $this->rows ) ) {
+			unset( $this->rows[ $id ] );
+		}
 	}
 
 	/*
