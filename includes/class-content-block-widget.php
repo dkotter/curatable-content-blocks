@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Class Tenup_Content_Block_Widget
+ * Class CCB_Content_Block_Widget
  */
 class CCB_Content_Block_Widget extends WP_Widget {
 

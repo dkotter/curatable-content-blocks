@@ -202,18 +202,18 @@ class CCB_Content_Block_Areas {
 
 							<?php if ( count( (array) $columns ) === $cols ) : ?>
 								<?php foreach ( (array) $columns as $column => $blocks ) : ?>
-									<div class="block" data-tenup-column="<?php echo esc_attr( $column ); ?>">
+									<div class="block" data-ccb-column="<?php echo esc_attr( $column ); ?>">
 										<?php $this->render_blocks( $area, $blocks, $row, $column ); ?>
 									</div>
 								<?php endforeach; ?>
 							<?php else :
 								$i = 1; while ( $i <= $cols ) :
 									if ( isset( $columns[ $i ] ) ) : ?>
-										<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+										<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 											<?php $this->render_blocks( $area, $columns[ $i ], $row, $i ); ?>
 										</div>
 									<?php else : ?>
-										<div class="block" data-tenup-column="<?php echo esc_attr( $i ); ?>">
+										<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 											<?php $this->render_blocks( $area, '', $row, $i ); ?>
 										</div>
 									<?php endif; ?>
@@ -302,8 +302,8 @@ class CCB_Content_Block_Areas {
 					<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
 					<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
 					<div class="pause">
-						<label for="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]"><?php esc_html_e( 'Pause', 'ccb' ); ?></label>
-						<input type="checkbox" id="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" name="tenup_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" value="y" <?php if ( isset( $data['pause'] ) ) { checked( $data['pause'], 'y' ); } ?>>
+						<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]"><?php esc_html_e( 'Pause', 'ccb' ); ?></label>
+						<input type="checkbox" id="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" value="y" <?php if ( isset( $data['pause'] ) ) { checked( $data['pause'], 'y' ); } ?>>
 					</div><!-- .pause -->
 				</h4>
 
