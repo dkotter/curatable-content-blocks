@@ -261,7 +261,7 @@ class CCB_Content_Block_Areas {
 	 */
 	public function render_blocks( $area, $blocks, $row = 0, $column = 1, $block_args = array() ) {
 	?>
-		<div class="content-blocks sortable">
+		<div class="content-blocks block-sortable">
 			<?php
 			$i = 0;
 

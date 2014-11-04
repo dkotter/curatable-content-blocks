@@ -10,7 +10,7 @@ var wp = window.wp || {};
 	var frame,
 		$body = $('body');
 
-	// Sortable blocks
+	// Sortable rows
 	$( '.sortable' ).sortable({
 		handle: '.handle',
 		forcePlaceholderSize: true,
@@ -28,6 +28,13 @@ var wp = window.wp || {};
 				});
 			}
 		}
+	});
+
+	// Sortable blocks
+	$( '.block-sortable' ).sortable({
+		handle: '.handle',
+		forcePlaceholderSize: true,
+		items: "> div.content-block"
     });
 
     $body.on( 'click', '.content-block-adder .toggle', function( e ) {
