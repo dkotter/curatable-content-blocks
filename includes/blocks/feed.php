@@ -76,7 +76,6 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 					'name'             => 'ccb_content_blocks[' . esc_attr( $row ) . '][' . esc_attr( $area ) . '][' . esc_attr( $column ) . '][' . esc_attr( $iterator ) . '][tag]',
 					'taxonomy'         => 'post_tag',
 					'show_option_none' => 'None',
-					'order'            => 'DESC',
 					'class'            => 'postform select2',
 				);
 				wp_dropdown_categories( $tag_args );
