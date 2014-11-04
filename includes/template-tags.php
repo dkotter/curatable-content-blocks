@@ -303,3 +303,93 @@ function ccb_locate_template( $template_names, $load = false, $require_once = tr
 
 	return $located;
 }
+
+/*
+ * Render blocks in an area.
+ *
+ * @param string $area The name of the area the blocks are a part of.
+ * @param array|string $blocks The blocks saved to this area.
+ * @param int $row The row number.
+ * @param int $column The column number.
+ * @param array $block_args Optional block arguments.
+ * @return void
+ */
+function ccb_render_blocks( $area, $blocks, $row = 0, $column = 1, $block_args = array() ) {
+?>
+	<div class="content-blocks block-sortable">
+		<?php
+		$i = 0;
+
+		// render the current data
+		if ( ! empty( $blocks ) && is_array( $blocks ) ) {
+			foreach ( $blocks as $data ) {
+				if ( isset( $data['type'] ) ) {
+					ccb_block_template( $data['type'], $data, $area, $i, $row, $column );
+				}
+				$i++;
+			}
+		}
+
+		ccb_render_adder( $area, $i, $block_args );
+?>
+	</div><!-- .content-blocks.sortable -->
+<?php
+}
+
+/*
+ * Render the template for a block.
+ *
+ * @param string $type The type of block this is.
+ * @param array $data The data saved to this block.
+ * @param string $area The area the block belongs to.
+ * @param int $i The iteration of this block.
+ * @param int $row The row the block belongs to.
+ * @param int $column The column the block belongs to.
+ * @return void
+ */
+function ccb_block_template( $type, $data, $area, $i, $row = 0, $column = 1 ) {
+	$registered_blocks = ccb_get_registered_content_blocks();
+	if ( isset( $registered_blocks[ $type ] ) && is_callable( array( $registered_blocks[ $type ]['class'], 'settings_form' ) ) ) {
+?>
+		<div class="content-block collapsed <?php echo esc_attr( $data['type'] ); ?>">
+			<h4 class="content-block-header">
+				<span class="handle"><img src="<?php echo CCB_URL . 'images/drag-handle.png'; ?>" /></span>
+				<?php echo esc_html( $registered_blocks[ $type ]['name'] ); ?>
+				<a href="#" class="delete-content-block"><?php esc_html_e( 'Delete', 'ccb' ); ?></a>
+				<div class="pause">
+					<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]"><?php esc_html_e( 'Pause', 'ccb' ); ?></label>
+					<input type="checkbox" id="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $i ); ?>][pause]" value="y" <?php if ( isset( $data['pause'] ) ) { checked( $data['pause'], 'y' ); } ?>>
+				</div><!-- .pause -->
+			</h4>
+
+			<div class="interior">
+				<?php $registered_blocks[ $type ]['class']::settings_form( $data, $area, $row, $column, $i ); ?>
+			</div><!-- .interior -->
+		</div><!-- .content-block.collapsed.<?php echo esc_attr( $data['type'] ); ?> -->
+<?php
+	}
+}
+
+/*
+ * Output the Add button.
+ *
+ * @param string $area The name of the area the block belongs to.
+ * @param int $iterator The iteration of the block.
+ * @param array $block_args Optional block arguments.
+ * @return void
+ */
+function ccb_render_adder( $area, $iterator = 0, $block_args = array() ) {
+?>
+	<div class="content-block-adder" data-ccb-area="<?php echo esc_attr( $area ); ?>" data-ccb-iterator="<?php echo esc_attr( $iterator ); ?>">
+		<a class="toggle" href="#"><?php esc_html_e( 'Add block', 'ccb' ); ?></a>
+		<div class="content-block-select hide-if-js">
+			<select name="new_content_block">
+				<?php foreach( ccb_get_registered_content_blocks( $block_args ) as $id => $block ) : ?>
+					<option value="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $block['name'] ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<a class="add-content-block button-secondary">Add</a>
+		</div><!-- .content-block-select.hide-if-js -->
+	</div><!-- .content-block-adder -->
+<?php
+}

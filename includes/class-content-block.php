@@ -33,7 +33,7 @@ abstract class CCB_Content_Block {
 	 * @return void
 	 */
 	public static function js_row_template( $id, $name, $class, $columns ) {
-		global $post, $ccb_content_block_areas;
+		global $post;
 
 		if ( $post ) :
 			$blocks = get_post_meta( $post->ID, 'ccb_content_blocks', true );
@@ -47,7 +47,7 @@ abstract class CCB_Content_Block {
 					</h3>
 					<?php for ( $i = 1; $i <= $columns; $i++ ) : ?>
 						<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
-							<?php $ccb_content_block_areas->render_blocks( $id, $blocks ); ?>
+							<?php ccb_render_blocks( $id, $blocks ); ?>
 						</div><!-- .block -->
 					<?php endfor; ?>
 				</div><!-- .postbox.row.new.<?php echo esc_attr( $class ); ?> -->
