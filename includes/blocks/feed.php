@@ -43,7 +43,7 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 			<p>
 				<?php $selected = isset( $data['post_type'] ) ? esc_attr( $data['post_type'] ) : 'any'; ?>
 				<label for="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][post_type]"><?php esc_html_e( 'Type of Content', 'ccb' ); ?></label>
-				<select name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][post_type][]" id="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][post_type]" class="postform select2">
+				<select name="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][post_type]" id="ccb_content_blocks[<?php echo esc_attr( $row ); ?>][<?php echo esc_attr( $area ); ?>][<?php echo esc_attr( $column ); ?>][<?php echo esc_attr( $iterator ); ?>][post_type]" class="postform select2">
 					<option value="any" <?php selected( $selected, 'any' ); ?>>All</option>
 					<?php
 					$post_types = get_post_types( array( 'public' => true, ) );
@@ -59,7 +59,7 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 				$cat_args = array(
 					'orderby'          => 'NAME',
 					'selected'         => isset( $data['category'] ) && ! empty( $data['category'] ) ? $data['category'] : 0,
-					'name'             => 'ccb_content_blocks[' . esc_attr( $row ) . '][' . esc_attr( $area ) . '][' . esc_attr( $column ) . '][' . esc_attr( $iterator ) . '][category][]',
+					'name'             => 'ccb_content_blocks[' . esc_attr( $row ) . '][' . esc_attr( $area ) . '][' . esc_attr( $column ) . '][' . esc_attr( $iterator ) . '][category]',
 					'show_option_none' => 'None',
 					'class'            => 'postform select2',
 				);
@@ -73,7 +73,7 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 				$tag_args = array(
 					'orderby'          => 'NAME',
 					'selected'         => isset( $data['tag'] ) ? $data['tag'] : 0,
-					'name'             => 'ccb_content_blocks[' . esc_attr( $row ) . '][' . esc_attr( $area ) . '][' . esc_attr( $column ) . '][' . esc_attr( $iterator ) . '][tag][]',
+					'name'             => 'ccb_content_blocks[' . esc_attr( $row ) . '][' . esc_attr( $area ) . '][' . esc_attr( $column ) . '][' . esc_attr( $iterator ) . '][tag]',
 					'taxonomy'         => 'post_tag',
 					'show_option_none' => 'None',
 					'order'            => 'DESC',
@@ -127,8 +127,8 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 		$new['title']     = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
 		$new['number']    = isset( $data['number'] ) ? absint( $data['number'] ) : '10';
 		$new['post_type'] = isset( $data['post_type'] ) ? sanitize_text_field( $data['post_type'] ) : 'any';
-		$new['category']  = isset( $data['category'] ) && '-1' !== $data['category'] ? array_map( 'absint', $data['category'] ) : array();
-		$new['tag']       = isset( $data['tag'] ) && -1 !== $data['tag'] ? array_map( 'absint', $data['tag'] ) : array();
+		$new['category']  = isset( $data['category'] ) && '-1' !== $data['category'] ? absint( $data['category'] ) : '';
+		$new['tag']       = isset( $data['tag'] ) && '-1' !== $data['tag'] ? absint( $data['tag'] ) : '';
 
 		/**
 		 * Filter the data being saved.
@@ -182,8 +182,8 @@ class CCB_Feed_Content_Block extends CCB_Content_Block {
 					'fields'         => 'ids',
 				);
 
-				$category = isset( $data['category'] ) ? absint( $data['category'] ) : false;
-				$tag = isset( $data['tag'] ) ? absint( $data['tag'] ) : false;
+				$category = ( isset( $data['category'] ) && '' !== $data['category'] ) ? absint( $data['category'] ) : false;
+				$tag = ( isset( $data['tag'] ) && '' !== $data['tag'] ) ? absint( $data['tag'] ) : false;
 
 				if ( $category || $tag ) {
 					$query_args['tax_query'] = array();

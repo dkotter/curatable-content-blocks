@@ -36,21 +36,21 @@ var wp = window.wp || {};
     });
 
 	var cache = {};
-	$body.on( 'click', '.add-content-block', function(e){
-		var $this = $(this),
-			$adder = $this.closest('.content-block-adder'),
-			area = $adder.data('ccbArea'),
+	$body.on( 'click', '.add-content-block', function( e ) {
+		var $this = $( this ),
+			$adder = $this.closest( '.content-block-adder' ),
+			area = $adder.data( 'ccbArea' ),
 			row = $this.parents( '.row' ).index(),
 			column = $this.parents( '.block' ).data( 'ccbColumn' ),
-			iterator = $adder.data('ccbIterator'),
-			$toggle = $adder.find('.toggle'),
-			type = $this.siblings('[name=new_content_block]').val(),
+			iterator = $adder.data( 'ccbIterator' ),
+			$toggle = $adder.find( '.toggle' ),
+			type = $this.siblings( '[name=new_content_block]' ).val(),
 			template;
 
 		if ( type in cache ) {
 			template = cache[type];
 		} else {
-			template = cache[type] = $('#tmpl-ccb-cb-' + type).html();
+			template = cache[type] = $( '#tmpl-ccb-cb-' + type ).html();
 		}
 
 		// Hard-coded instance of area support
@@ -58,11 +58,12 @@ var wp = window.wp || {};
 		template = template.replace( /\{\{\{row\}\}\}/g, row );
 		template = template.replace( /\{\{\{column\}\}\}/g, column );
 		template = template.replace( /\{\{\{iterator\}\}\}/g, iterator );
-		$adder.data('ccbIterator', iterator + 1);
+		$adder.data( 'ccbIterator', iterator + 1 );
 
 		var $added = $( template ).insertBefore( $adder );
-		// Example of initializing a JS widget on add
-		//$added.find( '.post-finder' ).postFinder();
+
+		// Initializing all JS widgets on add
+		$added.find( '.post-finder' ).postFinder();
 		//$added.find( '.select2').select2({ width: 200 });
 		if ( 'embeds' === type ) {
 			var editor_id = $added.find( '.wp-editor-area' ).attr( 'id' );
