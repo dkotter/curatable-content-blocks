@@ -21,21 +21,21 @@ There isn't any admin configuration currently needed. All configuration desired 
 
 By default, the plugin adds the curation ability to normal pages. If that isn't desired, you can remove that support like this, in your own theme or plugin:
 
-	```php
-	function prefix_remove_content_blocks_support() {
-		remove_post_type_support( 'page', 'ccb-content-blocks' );
-	}
-	add_action( 'init', 'prefix_remove_content_blocks_support' );
-	```
+```php
+function prefix_remove_content_blocks_support() {
+	remove_post_type_support( 'page', 'ccb-content-blocks' );
+}
+add_action( 'init', 'prefix_remove_content_blocks_support' );
+```
 
 To then add the curation ability to the content type(s) you want, do this:
 
-	```php
-	function prefix_add_content_blocks_support() {
-		add_post_type_support( 'post', 'ccb-content-blocks' );
-	}
-	add_action( 'init', 'prefix_add_content_blocks_support' );
-	```
+```php
+function prefix_add_content_blocks_support() {
+	add_post_type_support( 'post', 'ccb-content-blocks' );
+}
+add_action( 'init', 'prefix_add_content_blocks_support' );
+```
 	
 ## Usage
 
@@ -64,31 +64,31 @@ At any point, you can preview the item, to see how things will look, or save it.
 
 If you want to add in additional row options, beyond what's already included, you can do that utilizing a helper function the plugin has. Note that you'll need to add your own admin and front end styling for any additional rows added.
 
-	```php
-	function prefix_add_new_row_option() {
-		// Options here are unique row ID, row name, row class and the number of columns row has.
-		// ccb_register_row( $ID, $name, $class, array( 'columns' => $cols ) );
-		if ( function_exists( 'ccb_register_row' ) {
-			ccb_register_row( '1434-col', '1/4 - 3/4 Columns', 'col-1-4-3-4', array( 'columns' => 2 ) );
-		}
+```php
+function prefix_add_new_row_option() {
+	// Options here are unique row ID, row name, row class and the number of columns row has.
+	// ccb_register_row( $ID, $name, $class, array( 'columns' => $cols ) );
+	if ( function_exists( 'ccb_register_row' ) {
+		ccb_register_row( '1434-col', '1/4 - 3/4 Columns', 'col-1-4-3-4', array( 'columns' => 2 ) );
 	}
-	add_action( 'after_setup_theme', 'prefix_add_new_row_option' );
-	```
+}
+add_action( 'after_setup_theme', 'prefix_add_new_row_option' );
+```
 
 ### Add New Block Option
 
 You can also fairly easily add in your own custom blocks. Note that in addition to the code snippet below, you'll need to include the class that contains all the code the block uses. Can see what code is needed by looking in the plugin folder at `/includes/blocks/sample.php`.
 
-	```php
-	function prefix_add_new_block() {
-		// Options here are unique block ID, block name, name of the PHP class block uses and optionally if you want to create a widget out of this block.
-		// ccb_register_content_block( $ID, $name, $class_name, array( 'widget' => true ) );
-		if ( function_exists( 'ccb_register_content_block' ) {
-			ccb_register_content_block( 'featured-grid', 'Featured Grid', 'Prefix_Featured_Grid_Content_Block', array( 'widget' => true ) );
-		}
+```php
+function prefix_add_new_block() {
+	// Options here are unique block ID, block name, name of the PHP class block uses and optionally if you want to create a widget out of this block.
+	// ccb_register_content_block( $ID, $name, $class_name, array( 'widget' => true ) );
+	if ( function_exists( 'ccb_register_content_block' ) {
+		ccb_register_content_block( 'featured-grid', 'Featured Grid', 'Prefix_Featured_Grid_Content_Block', array( 'widget' => true ) );
 	}
-	add_action( 'after_setup_theme', 'prefix_add_new_block' );
-	```
+}
+add_action( 'after_setup_theme', 'prefix_add_new_block' );
+```
 	
 You can also easily extend a block that already exists. For instance, if you want to change the output of the Featured Item block, you can create a new class within your theme/plugin that extends the `CCB_Featured_Item_Content_Block` class. Then within that new class, override the `display` method. Then include this new class within your theme/plugin and register it as above, making sure the at least the ID portion is the same as the block you want to override.
 
