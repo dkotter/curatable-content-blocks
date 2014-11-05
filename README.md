@@ -11,7 +11,7 @@ If so, Curatable Content Blocks is the plugin for you. It allows you to easily m
 
 ## Installation
 
-1. First, download a [zip via Github](https://github.com/dkotter/content-blocks/archive/master.zip) and upload it using the WP plugin uploader.
+1. First, download a [zip via Github](https://github.com/dkotter/curatable-content-blocks/archive/master.zip) and upload it using the WP plugin uploader.
 2. Upload the entire `/curatable-content-blocks` directory to the `/wp-content/plugins/` directory. 
 3. Activate Curatable Content Blocks through the 'Plugins' menu in WordPress.
 
@@ -102,4 +102,4 @@ There are also plenty of hooks littered throughout this plugin, that allow you t
 
 ## Issues
 
-If you identify any errors or have an idea for improving the plugin, please [open an issue](https://github.com/dkotter/content-blocks/issues?state=open). We would love your input!
+If you identify any errors or have an idea for improving the plugin, please [open an issue](https://github.com/dkotter/curatable-content-blocks/issues?state=open). We would love your input!
