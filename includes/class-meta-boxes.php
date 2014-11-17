@@ -77,7 +77,7 @@ class CCB_Meta_Boxes {
 		<div id="curated-page" class="misc-pub-section">
 			<label for="ccb-curated-page"><strong><?php esc_html_e( apply_filters( 'ccb_curated_checkbox_text', 'Curated Page' ), 'ccb' ); ?>?</strong>&nbsp;</label>
 			<input id="ccb-curated-page" type="checkbox" value="yes" name="ccb-curated-page" <?php checked( 'yes', $curated ); ?> />
-		</div>
+		</div><!-- #curated-page.misc-pub-section -->
 	<?php
 		wp_nonce_field( 'save', 'ccb-save-curated-page' );
 	}
@@ -118,13 +118,30 @@ class CCB_Meta_Boxes {
 			return false;
 		}
 
+		/**
+		 * Allows the modification of the container class.
+		 *
+		 * Best used to get rid of the sortable class, to
+		 * stop the ability to sort rows. But can also be
+		 * used to add your own classes if needed.
+		 *
+		 * @since 0.1.0
+		 */
+		$container_class = apply_filters( 'ccb_admin_container_class', 'content-blocks-wrapper sortable' );
 		$rows = get_post_meta( $post->ID, 'ccb_content_blocks', true );
 
 		wp_nonce_field( 'ccb-save-content-blocks', 'ccb_content_blocks_nonce' );
 	?>
 
-		<div class="content-blocks-wrapper sortable">
+		<div id="content-blocks-wrapper" class="<?php echo esc_attr( $container_class ); ?>">
 	<?php
+			/**
+			* Fires before rows are rendered in the admin.
+			*
+			* @since 0.1.0
+			*/
+			do_action( 'ccb_admin_before_render_rows' );
+
 			if ( ! empty( $rows ) ) :
 				foreach ( (array) $rows as $row => $areas ) :
 					foreach ( (array) $areas as $area => $columns ) :
@@ -144,18 +161,18 @@ class CCB_Meta_Boxes {
 									<?php foreach ( (array) $columns as $column => $blocks ) : ?>
 										<div class="block" data-ccb-column="<?php echo esc_attr( $column ); ?>">
 											<?php ccb_render_blocks( $area, $blocks, $row, $column ); ?>
-										</div>
+										</div><!-- .block -->
 									<?php endforeach; ?>
 								<?php else :
 									$i = 1; while ( $i <= $cols ) :
 									if ( isset( $columns[ $i ] ) ) : ?>
 										<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 											<?php ccb_render_blocks( $area, $columns[ $i ], $row, $i ); ?>
-										</div>
+										</div><!-- .block -->
 									<?php else : ?>
 										<div class="block" data-ccb-column="<?php echo esc_attr( $i ); ?>">
 											<?php ccb_render_blocks( $area, '', $row, $i ); ?>
-										</div>
+										</div><!-- .block -->
 									<?php endif; ?>
 									<?php $i++; endwhile; ?>
 								<?php endif; ?>
@@ -166,6 +183,13 @@ class CCB_Meta_Boxes {
 					endforeach;
 				endforeach;
 			endif;
+
+			/**
+			 * Fires after rows are rendered in the admin.
+			 *
+			 * @since 0.1.0
+			 */
+			do_action( 'ccb_admin_after_render_rows' );
 	?>
 
 			<h3 class="ccb-add"><i class="dashicons dashicons-plus"></i> <?php esc_html_e( 'Add New Row', 'ccb' ); ?></h3>
@@ -183,7 +207,7 @@ class CCB_Meta_Boxes {
 					</ul>
 				</div><!-- .ccb-menu-pane -->
 			</div><!-- .ccb-menu -->
-		</div><!-- .content-blocks-wrapper -->
+		</div><!-- #content-blocks-wrapper -->
 
 	<?php
 		return true;
@@ -265,6 +289,15 @@ class CCB_Meta_Boxes {
 
 			$new[ $row ] = $value;
 		}
+
+		/**
+		 * Fires before rows are saved.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array $new Cleaned block data
+		 */
+		$new = apply_filters( 'ccb_admin_before_save_rows', $new );
 
 		update_post_meta( $post_id, $meta_key, $new );
 
