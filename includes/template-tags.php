@@ -96,12 +96,54 @@ function ccb_display_block( $type, $block, $area ) {
 		return false;
 	}
 
+	/**
+	 * Fires before an individual block is rendered.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string $type Type of block.
+	 * @param array $block Information stored in block.
+	 * @param string $area Name of area block is in.
+	 */
+	do_action( 'ccb_before_block', $type, $block, $area );
+
+	/**
+	 * Fires before an individual block is rendered. More specific then above.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $block Information stored in block.
+	 * @param string $area Name of area block is in.
+	 */
+	do_action( "ccb_before_block_{$type}", $block, $area );
+
 	// allow for overrides, e.g. in a child theme
 	if ( function_exists( 'ccb_content_block_display_' . $type ) ) {
 		call_user_func( 'ccb_content_block_display_' . $type, $type, $block, $area );
 	} elseif ( is_callable( array( $blocks[ $type ]['class'], 'display' ) ) ) {
 		$blocks[ $type ]['class']::display( $block, $area );
 	}
+
+	/**
+	 * Fires after an individual block is rendered.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string $type Type of block.
+	 * @param array $block Information stored in block.
+	 * @param string $area Name of area block is in.
+	 */
+	do_action( 'ccb_after_block', $type, $block, $area );
+
+	/**
+	 * Fires after an individual block is rendered. More specific then above.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $block Information stored in block.
+	 * @param string $area Name of area block is in.
+	 */
+	do_action( "ccb_after_block_{$type}", $block, $area );
 
 	return true;
 }
@@ -118,16 +160,26 @@ function ccb_display_rows( $rows ) {
 	if ( ! empty( $rows ) ) {
 		foreach ( (array) $rows as $row => $areas ) {
 			foreach ( (array) $areas as $area => $columns ) {
+				/**
+				 * Fires before an individual row is rendered.
+				 *
+				 * @since 0.1.0
+				 * @param string $area Name of row area.
+				 * @param array $columns Information stored in each column.
+				 */
+				do_action( 'ccb_before_row', $area, $columns );
+
+				/**
+				 * Fires before an individual row is rendered. More specific then above.
+				 *
+				 * @since 0.1.0
+				 *
+				 * @param array $columns Information stored in each column.
+				 */
+				do_action( "ccb_before_row_{$area}", $columns );
+
 				$registered_rows = ccb_get_registered_rows();
 				if ( isset( $registered_rows[ $area ] ) ) : ?>
-
-					<?php
-					/**
-					 * Fires before an individual row is rendered.
-					 *
-					 * @since 0.1.0
-					 */
-					do_action( 'ccb_before_row' ); ?>
 
 					<div class="row">
 
@@ -147,17 +199,8 @@ function ccb_display_rows( $rows ) {
 									}
 								} else {
 									$class = $registered_rows[ $area ]['class'];
-								} ?>
+								}
 
-								<?php
-								/**
-								 * Fires before an individual block is rendered.
-								 *
-								 * @since 0.1.0
-								 */
-								do_action( 'ccb_before_block' ); ?>
-
-								<?php
 								/*
 								 * Filter the class name(s) used for an individual block.
 								 *
@@ -165,8 +208,9 @@ function ccb_display_rows( $rows ) {
 								 *
 								 * @param string $class Current class names.
 								 */
-								?>
-								<div class="<?php echo esc_attr( apply_filters( 'ccb_block_class', $class ) ); ?>">
+								$class = apply_filters( 'ccb_block_class', $class ); ?>
+
+								<div class="<?php echo esc_attr( $class ); ?>">
 									<?php foreach ( $blocks as $data ) {
 										if ( isset( $data['type'] ) ) {
 											ccb_display_block( $data['type'], $data, $area );
@@ -174,27 +218,30 @@ function ccb_display_rows( $rows ) {
 									} ?>
 								</div><!-- .<?php echo esc_attr( $class ); ?> -->
 
-								<?php
-								/**
-								 * Fires after an individual block is rendered.
-								 *
-								 * @since 0.1.0
-								 */
-								do_action( 'ccb_after_block' ); ?>
 							<?php endif; ?>
 						<?php endforeach; ?>
 
 					</div><!-- .row -->
 
-					<?php
-					/**
-					 * Fires after an individual row is rendered.
-					 *
-					 * @since 0.1.0
-					 */
-					do_action( 'ccb_after_row' ); ?>
-
 				<?php endif;
+
+				/**
+				 * Fires after an individual row is rendered.
+				 *
+				 * @since 0.1.0
+				 * @param string $area Name of row area.
+				 * @param array $columns Information stored in each column.
+				 */
+				do_action( 'ccb_after_row', $area, $columns );
+
+				/**
+				 * Fires after an individual row is rendered. More specific then above.
+				 *
+				 * @since 0.1.0
+				 *
+				 * @param array $columns Information stored in each column.
+				 */
+				do_action( "ccb_after_row_{$area}", $columns );
 			}
 		}
 	}
