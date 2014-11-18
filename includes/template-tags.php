@@ -158,6 +158,15 @@ function ccb_display_rows( $rows ) {
 	$rows = (array) $rows;
 
 	if ( ! empty( $rows ) ) {
+
+		/**
+		 * Fires before any row is rendered.
+		 *
+		 * @since 0.1.0
+		 * @param array $rows All row information.
+		 */
+		do_action( 'ccb_before_all_rows', $rows );
+
 		foreach ( (array) $rows as $row => $areas ) {
 			foreach ( (array) $areas as $area => $columns ) {
 				/**
@@ -244,6 +253,14 @@ function ccb_display_rows( $rows ) {
 				do_action( "ccb_after_row_{$area}", $columns );
 			}
 		}
+
+		/**
+		 * Fires after all rows are rendered.
+		 *
+		 * @since 0.1.0
+		 * @param array $rows All row information.
+		 */
+		do_action( 'ccb_after_all_rows', $rows );
 	}
 }
 
