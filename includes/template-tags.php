@@ -113,10 +113,6 @@ function ccb_display_block( $type, $block, $area ) {
  * @return void
  */
 function ccb_display_rows( $rows ) {
-	if ( ! function_exists( 'ccb_display_block' ) ) {
-		return;
-	}
-
 	$rows = (array) $rows;
 
 	if ( ! empty( $rows ) ) {
