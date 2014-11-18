@@ -42,6 +42,9 @@ body {
   [class*="col-"] {
     float: left;
     padding: 0 20px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
   }
   .col-3-4 {
     width: 75%;
