@@ -31,7 +31,7 @@ class CCB_Front {
 		global $post;
 
 		if ( post_type_supports( get_post_type( $post->ID ), 'ccb-content-blocks' ) && 'yes' === get_post_meta( $post->ID, 'ccb_curated_page', true ) ) {
-			return ccb_get_template_part( 'curated-page' );
+			return ccb_get_template_part( 'curated-page', null, false );
 		} else {
 			return $original_template;
 		}
